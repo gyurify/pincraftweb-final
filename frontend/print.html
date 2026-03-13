@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print - Pin Button Maker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="pro-editor-body">
+
+    <header class="editor-toolbar">
+        <div class="toolbar-left">
+            <a href="editor.html" class="icon-btn" aria-label="Back to Editor">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </a>
+            <span class="toolbar-title">Print Layout</span>
+        </div>
+        <div class="toolbar-right">
+            <a href="home.html" class="tool-btn">Dashboard</a>
+        </div>
+    </header>
+
+    <div class="print-layout">
+        
+        <main class="print-preview-area">
+            <div class="paper-container">
+                <div class="paper-sheet">
+                    <div class="print-grid">
+                        <div class="print-slot has-design">
+                            <div class="slot-inner">
+                                <span class="slot-mock-text">SUMMER</span>
+                            </div>
+                        </div>
+                        <div class="print-slot has-design">
+                            <div class="slot-inner">
+                                <span class="slot-mock-text">SUMMER</span>
+                            </div>
+                        </div>
+                        <div class="print-slot has-design">
+                            <div class="slot-inner">
+                                <span class="slot-mock-text">SUMMER</span>
+                            </div>
+                        </div>
+                        <div class="print-slot has-design">
+                            <div class="slot-inner">
+                                <span class="slot-mock-text">SUMMER</span>
+                            </div>
+                        </div>
+                        <div class="print-slot empty-slot"></div>
+                        <div class="print-slot empty-slot"></div>
+                        <div class="print-slot empty-slot"></div>
+                        <div class="print-slot empty-slot"></div>
+                        <div class="print-slot empty-slot"></div>
+                        <div class="print-slot empty-slot"></div>
+                        <div class="print-slot empty-slot"></div>
+                        <div class="print-slot empty-slot"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="print-controls-area">
+            
+            <div class="print-section">
+                <h3 class="print-section-title">Print Settings</h3>
+                
+                <div class="input-group">
+                    <label class="pro-label">Paper Size</label>
+                    <select class="pro-input pro-select">
+                        <option>A4 (210 x 297 mm)</option>
+                        <option>US Letter (8.5 x 11 in)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="pro-label">Button Size</label>
+                    <select class="pro-input pro-select">
+                        <option>2.25" (Standard)</option>
+                        <option>1.25" (Small)</option>
+                        <option>3.00" (Large)</option>
+                    </select>
+                </div>
+
+                <div class="toggle-group">
+                    <label class="pro-label" for="cutlines-toggle">Show Cut Lines</label>
+                    <input type="checkbox" id="cutlines-toggle" class="ios-toggle" checked>
+                </div>
+            </div>
+
+            <div class="print-section">
+                <h3 class="print-section-title">Export</h3>
+                <button class="primary-btn full-width-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download PDF
+                </button>
+            </div>
+
+            <div class="print-section last-print-section">
+                <h3 class="print-section-title">Your Designs</h3>
+                <p class="print-gallery-hint">Select designs to fill the page.</p>
+                
+                <div class="gallery-grid">
+                    <div class="gallery-card selected-card">
+                        <div class="gallery-card-inner has-design">
+                            <span class="slot-mock-text small-text">SUMMER</span>
+                        </div>
+                        <div class="gallery-badge">4</div>
+                    </div>
+                    
+                    <div class="gallery-card">
+                        <div class="gallery-card-inner"></div>
+                    </div>
+
+                    <div class="gallery-card">
+                        <div class="gallery-card-inner"></div>
+                    </div>
+
+                    <div class="gallery-card">
+                        <div class="gallery-card-inner"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>
