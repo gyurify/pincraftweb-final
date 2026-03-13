@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor - Pin Button Maker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="editor-body">
+
+    <input type="radio" id="tab-text" name="editor-tabs" checked hidden>
+    <input type="radio" id="tab-photo" name="editor-tabs" hidden>
+    
+    <input type="checkbox" id="vis-text" checked hidden>
+    <input type="checkbox" id="vis-photo" checked hidden>
+
+    <nav class="navbar">
+        <div class="nav-content editor-nav">
+            <div class="nav-left">
+                <a href="home.html" class="icon-btn" aria-label="Back to Dashboard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </a>
+                <span class="nav-brand">Untitled Pin</span>
+            </div>
+            <button class="primary-btn small-btn">Export Pin</button>
+        </div>
+    </nav>
+
+    <main class="editor-layout">
+        
+        <aside class="editor-sidebar fade-in">
+            
+            <div class="sidebar-header">
+                <h2>Layers</h2>
+            </div>
+
+            <div class="layer-tabs">
+                <div class="layer-tab-item">
+                    <label for="vis-text" class="visibility-toggle" title="Toggle Visibility">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </label>
+                    <label for="tab-text" class="tab-label tab-text-label">Text Layer</label>
+                </div>
+
+                <div class="layer-tab-item">
+                    <label for="vis-photo" class="visibility-toggle" title="Toggle Visibility">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </label>
+                    <label for="tab-photo" class="tab-label tab-photo-label">Photo Layer</label>
+                </div>
+            </div>
+
+            <div class="control-panel panel-text">
+                <div class="input-group">
+                    <label>Pin Text</label>
+                    <input type="text" value="Summer Vibes" placeholder="Type here...">
+                </div>
+                <div class="input-group">
+                    <label>Font Size</label>
+                    <input type="range" min="10" max="100" value="40" class="apple-slider">
+                </div>
+                <div class="input-group">
+                    <label>Transparency</label>
+                    <input type="range" min="0" max="100" value="100" class="apple-slider">
+                </div>
+            </div>
+
+            <div class="control-panel panel-photo">
+                <div class="input-group">
+                    <label>Upload Image</label>
+                    <button class="secondary-btn upload-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Choose File
+                    </button>
+                </div>
+                <div class="input-group">
+                    <label>Transparency</label>
+                    <input type="range" min="0" max="100" value="100" class="apple-slider">
+                </div>
+                <div class="input-group" style="margin-top: 24px;">
+                    <button class="secondary-btn action-btn">Center Photo</button>
+                </div>
+            </div>
+
+        </aside>
+
+        <section class="editor-canvas slide-up">
+            <div class="pin-preview-wrapper">
+                <div class="pin-preview">
+                    
+                    <div class="preview-layer preview-photo">
+                        <div class="mock-photo"></div>
+                    </div>
+
+                    <div class="preview-layer preview-text">
+                        <span class="mock-text">Summer Vibes</span>
+                    </div>
+
+                    <div class="pin-gloss"></div>
+                </div>
+            </div>
+            <p class="canvas-hint">Drag layers to reposition (Prototype)</p>
+        </section>
+
+    </main>
+</body>
+</html>
