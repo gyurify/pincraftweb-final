@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pincraft</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar" aria-label="Primary">
+      <a class="brand" href="#home">Pincraft</a>
+
+      <div class="navbar-controls">
+        <button class="theme-toggle" type="button" aria-label="Toggle dark and light mode">
+          Theme
+        </button>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav-panel"
+          aria-label="Open navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <div class="nav-actions" id="site-nav-panel">
+        <ul class="nav-menu" id="site-menu">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#preview">Preview</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#members">Members</a></li>
+          <li><a href="#download">Download</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="section home-section">
+      <div class="section-content hero-content" data-reveal>
+        <p class="eyebrow">Button Pin Layout System</p>
+        <h1>Pincraft</h1>
+        <p class="hero-tagline">Design, edit, and print button pin layouts with ease.</p>
+        <p class="hero-description">
+          Pincraft helps users build clean, print-ready button pin layouts through a simple
+          workflow for designing, refining, previewing, and preparing output.
+        </p>
+        <div class="hero-actions">
+          <a href="#download">Download Now</a>
+          <a href="#preview">View Preview</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview" class="section overview-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">Overview</p>
+        <h2>A focused workspace for creating button pin layouts from start to finish.</h2>
+        <p>
+          Pincraft is a design and print preparation system that helps users organize layouts,
+          review output, and move from concept to production with less manual effort.
+        </p>
+      </div>
+      <div class="overview-grid">
+        <article data-reveal>
+          <h3>Structured Design</h3>
+          <p>Create button pin compositions with a clearer workflow for arranging visuals and content.</p>
+        </article>
+        <article data-reveal>
+          <h3>Preview Before Printing</h3>
+          <p>Review layouts before final output so adjustments can be made with confidence.</p>
+        </article>
+        <article data-reveal>
+          <h3>Prepared for Output</h3>
+          <p>Move designs toward print-ready production with a workflow built for practical use.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="demo" class="section demo-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">Try It Live</p>
+        <h2>Test the editor before you download the full app.</h2>
+        <p>
+          Try the core workflow directly in the browser. Add text and photos, drag layers freely
+          inside the button circle, save layouts, load them again, and prepare a print-ready
+          result before downloading the full app.
+        </p>
+      </div>
+      <div class="demo-shell" data-reveal>
+        <div class="demo-toolbar" role="toolbar" aria-label="Interactive Pincraft editor tools">
+          <button type="button" class="demo-tool" data-demo-action="save">Save</button>
+          <button type="button" class="demo-tool" data-demo-action="load">Load</button>
+          <button type="button" class="demo-tool" data-demo-action="upload">Upload Image</button>
+          <button type="button" class="demo-tool" data-demo-action="photo">Add Photo</button>
+          <button type="button" class="demo-tool" data-demo-action="text">Add Text</button>
+          <button type="button" class="demo-tool" data-demo-action="reset">Home</button>
+          <button type="button" class="demo-tool demo-tool--accent" data-demo-action="print">Print -&gt;</button>
+        </div>
+
+        <div class="demo-workspace">
+          <div class="demo-stage-panel">
+            <div class="demo-canvas">
+              <div class="demo-print-area">
+                <div class="demo-stage" data-demo-stage>
+                  <div class="demo-button-outline demo-button-outline--outer"></div>
+                  <div class="demo-button-face" data-demo-button-face></div>
+                  <div class="demo-button-outline demo-button-outline--inner"></div>
+                  <div class="demo-layer-area" data-demo-layer-area></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-layer-tabs" data-demo-layer-tabs></div>
+          </div>
+
+          <aside class="demo-inspector">
+            <div class="demo-inspector__section">
+              <h3>Layer section</h3>
+              <p class="demo-meta">
+                Active layer:
+                <span data-demo-active-name>Text 1</span>
+              </p>
+
+              <label class="demo-field" data-demo-field="text">
+                <span>Text</span>
+                <input type="text" data-demo-input="text" value="Text 1">
+              </label>
+
+              <label class="demo-field" data-demo-field="font">
+                <span>Font</span>
+                <select data-demo-input="font">
+                  <option value="Arial, sans-serif">Sans Serif</option>
+                  <option value="Georgia, serif">Serif</option>
+                  <option value="'Courier New', monospace">Monospace</option>
+                </select>
+              </label>
+
+              <label class="demo-field" data-demo-field="color">
+                <span>Color</span>
+                <input type="color" data-demo-input="color" value="#1e2a44">
+              </label>
+            </div>
+
+            <div class="demo-inspector__section">
+              <h3>Transform section</h3>
+
+              <label class="demo-range">
+                <span>Size</span>
+                <input type="range" data-demo-input="size" min="1" max="100" value="22">
+                <output data-demo-output="size">22px</output>
+              </label>
+
+              <label class="demo-range">
+                <span>Rotate</span>
+                <input type="range" data-demo-input="rotation" min="-180" max="180" value="0">
+                <output data-demo-output="rotation">0deg</output>
+              </label>
+
+              <label class="demo-range">
+                <span>Stretch</span>
+                <input type="range" data-demo-input="stretch" min="60" max="160" value="100">
+                <output data-demo-output="stretch">100%</output>
+              </label>
+
+              <label class="demo-range">
+                <span>Opacity</span>
+                <input type="range" data-demo-input="opacity" min="20" max="100" value="100">
+                <output data-demo-output="opacity">100%</output>
+              </label>
+
+              <label class="demo-field">
+                <span>Button Background</span>
+                <input type="color" data-demo-input="background" value="#f7f9fd">
+              </label>
+
+              <p class="demo-help">
+                Drag layers inside the circle to move them, then drag the layer tabs below to send
+                items behind or bring them forward before saving, loading, or printing.
+              </p>
+            </div>
+
+            <p class="demo-status" data-demo-status aria-live="polite">
+              Try dragging a layer inside the button circle.
+            </p>
+          </aside>
+        </div>
+
+        <input class="demo-upload-input" data-demo-upload type="file" accept="image/*" hidden>
+      </div>
+    </section>
+
+    <section id="features" class="section features-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">Features</p>
+        <h2>Built with the full workflow needed for accurate button pin production.</h2>
+        <p>
+          Pincraft combines live editing, layer control, design storage, print preparation,
+          PDF export, and real-size preview tools in one focused workspace.
+        </p>
+      </div>
+      <div class="feature-list">
+        <article class="feature-card" data-reveal>
+          <div class="feature-icon" aria-hidden="true">IE</div>
+          <h3>Interactive Button Editor</h3>
+          <p>Upload and position images, add draggable and resizable text layers, and apply rotation, scaling, transparency, and stretch adjustments with real-size preview support.</p>
+        </article>
+
+        <article class="feature-card" data-reveal>
+          <div class="feature-icon" aria-hidden="true">LM</div>
+          <h3>Layer Management System</h3>
+          <p>Show or hide layers, reorder elements, perform undo and redo actions, and drag or resize objects within the design canvas.</p>
+        </article>
+
+        <article class="feature-card" data-reveal>
+          <div class="feature-icon" aria-hidden="true">DS</div>
+          <h3>Multiple Design Storage</h3>
+          <p>Save multiple button designs locally and access them through a gallery interface for editing or reuse.</p>
+        </article>
+
+        <article class="feature-card" data-reveal>
+          <div class="feature-icon" aria-hidden="true">PG</div>
+          <h3>Smart Print Layout Generator</h3>
+          <p>Automatically arranges multiple circular button designs on an A4 sheet for an optimized printing layout.</p>
+        </article>
+
+        <article class="feature-card" data-reveal>
+          <div class="feature-icon" aria-hidden="true">PDF</div>
+          <h3>PDF Export</h3>
+          <p>Generate professional and print-ready PDF files directly from the application.</p>
+        </article>
+
+        <article class="feature-card" data-reveal>
+          <div class="feature-icon" aria-hidden="true">RM</div>
+          <h3>Live Preview and Real Measurement</h3>
+          <p>Ensures accurate scaling based on actual button size standards to help minimize printing errors.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="preview" class="section preview-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">Preview</p>
+        <h2>See the main screens before you download.</h2>
+        <p>
+          Each preview starts with a screenshot and reveals a short looping video so the workflow
+          is easy to understand at a glance.
+        </p>
+      </div>
+      <div class="preview-grid">
+        <article class="preview-card" data-reveal>
+          <button type="button" class="preview-toggle" aria-pressed="false">
+            <div class="preview-media">
+              <img src="assets/login.png" alt="Login page screenshot preview">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/login-preview.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="preview-caption">
+              <h3>Login Page</h3>
+              <p>Quick access to the system with a simple sign-in experience.</p>
+            </div>
+          </button>
+        </article>
+
+        <article class="preview-card" data-reveal>
+          <button type="button" class="preview-toggle" aria-pressed="false">
+            <div class="preview-media">
+              <img src="assets/home.png" alt="Home page screenshot preview">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/home-preview.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="preview-caption">
+              <h3>Home Page</h3>
+              <p>Overview of tools, project access, and the main working dashboard.</p>
+            </div>
+          </button>
+        </article>
+
+        <article class="preview-card" data-reveal>
+          <button type="button" class="preview-toggle" aria-pressed="false">
+            <div class="preview-media">
+              <img src="assets/editor.png" alt="Editor page screenshot preview">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/editor-preview.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="preview-caption">
+              <h3>Editor Page</h3>
+              <p>Workspace for arranging layouts, refining content, and adjusting pin designs.</p>
+            </div>
+          </button>
+        </article>
+
+        <article class="preview-card" data-reveal>
+          <button type="button" class="preview-toggle" aria-pressed="false">
+            <div class="preview-media">
+              <img src="assets/print.png" alt="Print page screenshot preview">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/print-preview.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="preview-caption">
+              <h3>Print Page</h3>
+              <p>Final review area for checking layouts before sending them to print.</p>
+            </div>
+          </button>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="section about-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">About</p>
+        <h2>Made to simplify the full button pin layout process.</h2>
+        <p>
+          Pincraft is built to help users manage, design, preview, and print button pin layouts
+          easily through one clear and organized workflow.
+        </p>
+      </div>
+      <div class="about-content" data-reveal>
+        <div class="about-copy">
+          <p>
+            Pincraft brings the main stages of button pin production into one focused workspace.
+            Instead of jumping between separate steps, users can manage projects, build layouts,
+            review previews, and prepare output with a smoother process from start to finish.
+          </p>
+          <p>
+            The goal is to make button pin layout work easier to understand and more efficient to
+            complete, while keeping the interface clean, practical, and ready for real production
+            use.
+          </p>
+        </div>
+        <div class="about-highlights">
+          <article>
+            <h3>Manage</h3>
+            <p>Keep projects organized and easier to track in one place.</p>
+          </article>
+          <article>
+            <h3>Design</h3>
+            <p>Create and refine layouts with tools focused on button pin work.</p>
+          </article>
+          <article>
+            <h3>Preview</h3>
+            <p>Check how pages will look before finalizing the output.</p>
+          </article>
+          <article>
+            <h3>Print</h3>
+            <p>Move toward print-ready results with a clearer preparation flow.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="members" class="section members-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">Members</p>
+        <h2>The people behind Pincraft.</h2>
+        <p>Meet the team members contributing to the design, development, and delivery of Pincraft.</p>
+      </div>
+      <div class="members-grid">
+        <article
+          class="member-card"
+          data-reveal
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog"
+          aria-controls="member-modal"
+          data-member-name="Member 1"
+          data-member-role="Project Lead"
+          data-member-bio="Placeholder bio for Member 1. Leads planning, direction, and overall coordination for the Pincraft project."
+          data-member-link="https://example.com/member-1"
+        >
+          <img src="assets/member-1.jpg" alt="Profile placeholder for Member 1">
+          <div class="member-card__body">
+            <h3>Member 1</h3>
+            <p>Project Lead</p>
+          </div>
+          <span class="member-card__action">View Details</span>
+        </article>
+
+        <article
+          class="member-card"
+          data-reveal
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog"
+          aria-controls="member-modal"
+          data-member-name="Member 2"
+          data-member-role="UI Designer"
+          data-member-bio="Placeholder bio for Member 2. Focuses on interface clarity, visual consistency, and user-friendly layout decisions."
+          data-member-link="https://example.com/member-2"
+        >
+          <img src="assets/member-2.jpg" alt="Profile placeholder for Member 2">
+          <div class="member-card__body">
+            <h3>Member 2</h3>
+            <p>UI Designer</p>
+          </div>
+          <span class="member-card__action">View Details</span>
+        </article>
+
+        <article
+          class="member-card"
+          data-reveal
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog"
+          aria-controls="member-modal"
+          data-member-name="Member 3"
+          data-member-role="Frontend Developer"
+          data-member-bio="Placeholder bio for Member 3. Builds the responsive interface and interactive website experience for Pincraft."
+          data-member-link="https://example.com/member-3"
+        >
+          <img src="assets/member-3.jpg" alt="Profile placeholder for Member 3">
+          <div class="member-card__body">
+            <h3>Member 3</h3>
+            <p>Frontend Developer</p>
+          </div>
+          <span class="member-card__action">View Details</span>
+        </article>
+
+        <article
+          class="member-card"
+          data-reveal
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog"
+          aria-controls="member-modal"
+          data-member-name="Member 4"
+          data-member-role="Backend Developer"
+          data-member-bio="Placeholder bio for Member 4. Supports system logic, data handling, and the core functionality behind the workflow."
+          data-member-link="https://example.com/member-4"
+        >
+          <img src="assets/member-4.jpg" alt="Profile placeholder for Member 4">
+          <div class="member-card__body">
+            <h3>Member 4</h3>
+            <p>Backend Developer</p>
+          </div>
+          <span class="member-card__action">View Details</span>
+        </article>
+
+        <article
+          class="member-card"
+          data-reveal
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog"
+          aria-controls="member-modal"
+          data-member-name="Member 5"
+          data-member-role="QA and Documentation"
+          data-member-bio="Placeholder bio for Member 5. Helps review quality, test workflows, and prepare clear project documentation."
+          data-member-link="https://example.com/member-5"
+        >
+          <img src="assets/member-5.jpg" alt="Profile placeholder for Member 5">
+          <div class="member-card__body">
+            <h3>Member 5</h3>
+            <p>QA and Documentation</p>
+          </div>
+          <span class="member-card__action">View Details</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="download" class="section download-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">Download</p>
+        <h2>Ready to try Pincraft?</h2>
+        <p>
+          Start using a simpler system for managing, designing, previewing, and printing button
+          pin layouts.
+        </p>
+      </div>
+      <div class="download-content" data-reveal>
+        <div class="download-copy">
+          <p class="download-lead">Bring your full button pin workflow into one clean workspace.</p>
+          <p>
+            Download Pincraft and explore a more organized way to create print-ready layouts with
+            less friction from start to finish.
+          </p>
+        </div>
+        <a href="#" class="download-button">Download Pincraft</a>
+      </div>
+    </section>
+  </main>
+
+  <div
+    class="member-modal"
+    id="member-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="member-modal-title"
+  >
+    <div class="member-modal__backdrop" data-close-modal="true"></div>
+    <div class="member-modal__panel" role="document">
+      <button type="button" class="member-modal__close" aria-label="Close member details">
+        Close
+      </button>
+      <div class="member-modal__content">
+        <p class="eyebrow">Member Details</p>
+        <h2 id="member-modal-title">Member 1</h2>
+        <p class="member-modal__role">Project Lead</p>
+        <p class="member-modal__bio">
+          Placeholder bio for Member 1. Leads planning, direction, and overall coordination for the
+          Pincraft project.
+        </p>
+        <a
+          class="member-modal__link"
+          href="https://example.com/member-1"
+          target="_blank"
+          rel="noreferrer"
+        >
+          View Portfolio
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
