@@ -7,6 +7,7 @@ const navPanel = document.querySelector(".nav-actions");
 const navMenu = document.querySelector(".nav-menu");
 const navLinks = Array.from(document.querySelectorAll('.nav-menu a[href^="#"]'));
 const previewCards = Array.from(document.querySelectorAll(".preview-card"));
+const memberImages = Array.from(document.querySelectorAll(".member-card__media img"));
 const revealElements = Array.from(document.querySelectorAll("[data-reveal]"));
 const downloadModal = document.querySelector("#download-modal");
 const downloadModalClose = document.querySelector(".download-modal__close");
@@ -212,6 +213,28 @@ const bindPreviewInteractions = () => {
       closeOtherPreviews(card);
       setPreviewState(card, nextState);
     });
+  });
+};
+
+const syncMemberImageState = (image) => {
+  const media = image.closest(".member-card__media");
+
+  if (!media) {
+    return;
+  }
+
+  media.classList.toggle("is-fallback", image.naturalWidth === 0);
+};
+
+const initMemberImageFallbacks = () => {
+  memberImages.forEach((image) => {
+    const updateImageState = () => {
+      syncMemberImageState(image);
+    };
+
+    image.addEventListener("load", updateImageState);
+    image.addEventListener("error", updateImageState);
+    updateImageState();
   });
 };
 
@@ -985,6 +1008,16 @@ const reorderDemoLayers = (draggedId, targetId, position) => {
   setDemoStatus("Layer order updated. Tabs farther to the right appear on top.");
 };
 
+const focusDemoLayerTab = (layerId) => {
+  requestAnimationFrame(() => {
+    const tab = demoLayerTabs?.querySelector(`.demo-layer-tab[data-layer-id="${layerId}"]`);
+
+    if (tab instanceof HTMLElement) {
+      tab.focus();
+    }
+  });
+};
+
 const initDemoEditor = () => {
   if (!demoShell || !demoToolbar || !demoStage || !demoLayerArea || !demoLayerTabs) {
     return;
@@ -1143,20 +1176,39 @@ const initDemoEditor = () => {
 
   demoLayerTabs.addEventListener("keydown", (event) => {
     const target = event.target;
-
-    if (!(target instanceof Element) || (event.key !== "Enter" && event.key !== " ")) {
-      return;
-    }
-
-    const tab = target.closest(".demo-layer-tab");
+    const tab = target instanceof Element ? target.closest(".demo-layer-tab") : null;
     const layerId = tab?.getAttribute("data-layer-id");
 
     if (!layerId) {
       return;
     }
 
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setSelectedDemoLayer(layerId);
+      return;
+    }
+
+    if ((event.key !== "ArrowLeft" && event.key !== "ArrowRight") || target !== tab) {
+      return;
+    }
+
     event.preventDefault();
-    setSelectedDemoLayer(layerId);
+    const currentIndex = demoState.layers.findIndex((layer) => layer.id === layerId);
+
+    if (currentIndex < 0) {
+      return;
+    }
+
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    const targetLayer = demoState.layers[currentIndex + direction];
+
+    if (!targetLayer) {
+      return;
+    }
+
+    reorderDemoLayers(layerId, targetLayer.id, direction > 0 ? "after" : "before");
+    focusDemoLayerTab(layerId);
   });
 
   demoLayerTabs.addEventListener("dragstart", (event) => {
@@ -1323,6 +1375,7 @@ setTheme(getPreferredTheme());
 syncMenuState();
 updateActiveLink();
 bindPreviewInteractions();
+initMemberImageFallbacks();
 bindDownloadModalInteractions();
 initRevealAnimations();
 initDemoEditor();
