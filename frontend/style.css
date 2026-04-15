@@ -959,6 +959,12 @@ main > * {
   box-shadow: var(--shadow-sm);
 }
 
+.feature-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+  flex: 0 0 auto;
+}
+
 .feature-card h3 {
   color: var(--text-1);
 }
