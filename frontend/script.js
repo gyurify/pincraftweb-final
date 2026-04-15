@@ -7,17 +7,12 @@ const navPanel = document.querySelector(".nav-actions");
 const navMenu = document.querySelector(".nav-menu");
 const navLinks = Array.from(document.querySelectorAll('.nav-menu a[href^="#"]'));
 const previewCards = Array.from(document.querySelectorAll(".preview-card"));
-const memberCards = Array.from(document.querySelectorAll(".member-card[data-member-name]"));
 const revealElements = Array.from(document.querySelectorAll("[data-reveal]"));
-const memberModal = document.querySelector("#member-modal");
-const memberModalClose = document.querySelector(".member-modal__close");
-const memberModalTitle = document.querySelector("#member-modal-title");
-const memberModalRole = document.querySelector(".member-modal__role");
-const memberModalBio = document.querySelector(".member-modal__bio");
-const memberModalLink = document.querySelector(".member-modal__link");
+const downloadModal = document.querySelector("#download-modal");
+const downloadModalClose = document.querySelector(".download-modal__close");
 const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-let activeMemberTrigger = null;
+let activeDownloadTrigger = null;
 
 // Persist the chosen theme and keep the dropdown nav state in sync.
 const getStoredTheme = () => {
@@ -51,9 +46,10 @@ const setTheme = (theme) => {
   root.dataset.theme = theme;
 
   if (themeToggle) {
-    themeToggle.textContent = nextTheme === "dark" ? "Dark" : "Light";
+    themeToggle.dataset.theme = theme;
     themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
     themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+    themeToggle.setAttribute("title", `Switch to ${nextTheme} mode`);
   }
 };
 
@@ -219,81 +215,48 @@ const bindPreviewInteractions = () => {
   });
 };
 
-const isMemberModalOpen = () => memberModal?.classList.contains("is-open");
+const isDownloadModalOpen = () => downloadModal?.classList.contains("is-open");
 
-const openMemberModal = (card) => {
-  if (
-    !card ||
-    !memberModal ||
-    !memberModalTitle ||
-    !memberModalRole ||
-    !memberModalBio ||
-    !memberModalLink
-  ) {
+const openDownloadModal = (trigger = null) => {
+  if (!downloadModal) {
     return;
   }
 
-  const name = card.dataset.memberName ?? "Member";
-  const role = card.dataset.memberRole ?? "Team Member";
-  const bio = card.dataset.memberBio ?? "Placeholder bio.";
-  const link = card.dataset.memberLink ?? "#";
-
-  activeMemberTrigger = card;
-  memberModalTitle.textContent = name;
-  memberModalRole.textContent = role;
-  memberModalBio.textContent = bio;
-  memberModalLink.href = link;
-  memberModalLink.setAttribute("aria-label", `Open portfolio for ${name}`);
-  memberModal.classList.add("is-open");
-  memberModal.setAttribute("aria-hidden", "false");
+  activeDownloadTrigger = trigger instanceof HTMLElement ? trigger : null;
+  downloadModal.classList.add("is-open");
+  downloadModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
-  memberModalClose?.focus();
+  downloadModalClose?.focus();
 };
 
-const closeMemberModal = () => {
-  if (!memberModal || !isMemberModalOpen()) {
+const closeDownloadModal = () => {
+  if (!downloadModal || !isDownloadModalOpen()) {
     return;
   }
 
-  const triggerToRestore = activeMemberTrigger;
+  const triggerToRestore = activeDownloadTrigger;
 
-  memberModal.classList.remove("is-open");
-  memberModal.setAttribute("aria-hidden", "true");
+  downloadModal.classList.remove("is-open");
+  downloadModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
-  activeMemberTrigger = null;
+  activeDownloadTrigger = null;
   triggerToRestore?.focus();
 };
 
-// Member cards populate one shared modal with placeholder portfolio details.
-const bindMemberInteractions = () => {
-  memberCards.forEach((card) => {
-    card.addEventListener("click", () => {
-      openMemberModal(card);
-    });
-
-    card.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") {
-        return;
-      }
-
-      event.preventDefault();
-      openMemberModal(card);
-    });
+const bindDownloadModalInteractions = () => {
+  downloadModalClose?.addEventListener("click", () => {
+    closeDownloadModal();
   });
 
-  memberModalClose?.addEventListener("click", () => {
-    closeMemberModal();
-  });
-
-  memberModal?.addEventListener("click", (event) => {
+  downloadModal?.addEventListener("click", (event) => {
     const target = event.target;
 
     if (!(target instanceof Element)) {
       return;
     }
 
-    if (target.closest("[data-close-modal='true']")) {
-      closeMemberModal();
+    if (target.closest("[data-close-download-modal='true']")) {
+      closeDownloadModal();
     }
   });
 };
@@ -420,6 +383,7 @@ const createDemoState = () => ({
       ratio: 1,
       rotation: -8,
       stretch: 100,
+      visible: true,
       opacity: 100,
     },
     {
@@ -432,6 +396,7 @@ const createDemoState = () => ({
       size: 22,
       rotation: 0,
       stretch: 100,
+      visible: true,
       opacity: 100,
       color: "#2b3648",
       font: "Arial, sans-serif",
@@ -446,6 +411,7 @@ const createDemoState = () => ({
       size: 18,
       rotation: 0,
       stretch: 100,
+      visible: true,
       opacity: 100,
       color: "#2b3648",
       font: "Arial, sans-serif",
@@ -478,6 +444,7 @@ const normalizeDemoLayer = (layer, index) => {
       ratio: typeof layer.ratio === "number" && layer.ratio > 0 ? layer.ratio : 1,
       rotation: typeof layer.rotation === "number" ? layer.rotation : 0,
       stretch: typeof layer.stretch === "number" ? layer.stretch : 100,
+      visible: layer.visible !== false,
       opacity: typeof layer.opacity === "number" ? layer.opacity : 100,
     };
   }
@@ -492,6 +459,7 @@ const normalizeDemoLayer = (layer, index) => {
     size: typeof layer.size === "number" ? layer.size : 20,
     rotation: typeof layer.rotation === "number" ? layer.rotation : 0,
     stretch: typeof layer.stretch === "number" ? layer.stretch : 100,
+    visible: layer.visible !== false,
     opacity: typeof layer.opacity === "number" ? layer.opacity : 100,
     color: layer.color ?? "#2b3648",
     font: layer.font ?? "Arial, sans-serif",
@@ -562,6 +530,7 @@ const addDemoTextLayer = () => {
     size: 20,
     rotation: 0,
     stretch: 100,
+    visible: true,
     opacity: 100,
     color: "#2b3648",
     font: "Arial, sans-serif",
@@ -587,6 +556,7 @@ const addDemoPhotoLayer = (src = createDemoPlaceholderImage("Photo"), ratio = 1,
     ratio,
     rotation: 0,
     stretch: 100,
+    visible: true,
     opacity: 100,
   };
 
@@ -827,9 +797,10 @@ const renderDemoLayerTabs = () => {
   demoState.layers.forEach((layer) => {
     const tab = document.createElement("div");
     const label = document.createElement("span");
+    const visibility = document.createElement("button");
     const remove = document.createElement("button");
 
-    tab.className = `demo-layer-tab${layer.id === demoState.selectedId ? " is-active" : ""}`;
+    tab.className = `demo-layer-tab${layer.id === demoState.selectedId ? " is-active" : ""}${layer.visible === false ? " is-hidden" : ""}`;
     tab.dataset.layerId = layer.id;
     tab.tabIndex = 0;
     tab.draggable = true;
@@ -838,6 +809,13 @@ const renderDemoLayerTabs = () => {
 
     label.textContent = layer.name;
 
+    visibility.type = "button";
+    visibility.className = "demo-layer-tab__visibility";
+    visibility.dataset.toggleLayer = layer.id;
+    visibility.draggable = false;
+    visibility.setAttribute("aria-label", `${layer.visible === false ? "Show" : "Hide"} ${layer.name}`);
+    visibility.textContent = layer.visible === false ? "Show" : "Hide";
+
     remove.type = "button";
     remove.className = "demo-layer-tab__remove";
     remove.dataset.removeLayer = layer.id;
@@ -845,7 +823,7 @@ const renderDemoLayerTabs = () => {
     remove.setAttribute("aria-label", `Remove ${layer.name}`);
     remove.textContent = "x";
 
-    tab.append(label, remove);
+    tab.append(label, visibility, remove);
     demoLayerTabs.append(tab);
   });
 };
@@ -858,6 +836,10 @@ const renderDemoLayers = () => {
   demoLayerArea.innerHTML = "";
 
   demoState.layers.forEach((layer, index) => {
+    if (layer.visible === false) {
+      return;
+    }
+
     const element = document.createElement("div");
 
     element.className = `demo-layer demo-layer--${layer.type}${layer.id === demoState.selectedId ? " is-selected" : ""}`;
@@ -969,10 +951,9 @@ const stopDemoDrag = () => {
   renderDemoEditor();
 };
 
-const printDemoEditor = () => {
-  document.body.classList.add("demo-print-mode");
-  setDemoStatus("Opening a print-ready preview for the current layout.");
-  window.print();
+const printDemoEditor = (trigger = null) => {
+  openDownloadModal(trigger);
+  setDemoStatus("Download the full app to unlock the complete print workflow.");
 };
 
 const clearDemoLayerReorderState = () => {
@@ -1057,7 +1038,7 @@ const initDemoEditor = () => {
     }
 
     if (action === "print") {
-      printDemoEditor();
+      printDemoEditor(trigger);
     }
   });
 
@@ -1133,6 +1114,22 @@ const initDemoEditor = () => {
 
     if (removeTrigger) {
       removeDemoLayer(removeTrigger.getAttribute("data-remove-layer") ?? "");
+      return;
+    }
+
+    const visibilityTrigger = target.closest("[data-toggle-layer]");
+
+    if (visibilityTrigger) {
+      const layerId = visibilityTrigger.getAttribute("data-toggle-layer") ?? "";
+      const layer = getDemoLayerById(layerId);
+
+      if (!layer) {
+        return;
+      }
+
+      layer.visible = layer.visible === false;
+      renderDemoEditor();
+      setDemoStatus(`${layer.name} is now ${layer.visible === false ? "hidden" : "visible"}.`);
       return;
     }
 
@@ -1326,7 +1323,7 @@ setTheme(getPreferredTheme());
 syncMenuState();
 updateActiveLink();
 bindPreviewInteractions();
-bindMemberInteractions();
+bindDownloadModalInteractions();
 initRevealAnimations();
 initDemoEditor();
 
@@ -1361,10 +1358,6 @@ window.addEventListener("click", (event) => {
   }
 });
 
-window.addEventListener("afterprint", () => {
-  document.body.classList.remove("demo-print-mode");
-});
-
 window.addEventListener(
   "scroll",
   () => {
@@ -1376,7 +1369,7 @@ window.addEventListener(
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeMenu();
-    closeMemberModal();
+    closeDownloadModal();
   }
 });
 

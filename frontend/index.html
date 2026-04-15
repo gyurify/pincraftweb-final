@@ -13,7 +13,22 @@
 
       <div class="navbar-controls">
         <button class="theme-toggle" type="button" aria-label="Toggle dark and light mode">
-          Theme
+          <span class="theme-toggle__track" aria-hidden="true">
+            <span class="theme-toggle__icon theme-toggle__icon--sun">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4.2"></circle>
+                <path d="M12 2.8v2.1M12 19.1v2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M2.8 12h2.1M19.1 12h2.1M5.5 18.5 7 17M17 7l1.5-1.5"></path>
+              </svg>
+            </span>
+            <span class="theme-toggle__icon theme-toggle__icon--moon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.6 14.9A7.6 7.6 0 0 1 9.1 5.4a8.2 8.2 0 1 0 8.5 9.5Z"></path>
+                <path d="M18.8 5.2v2.4M20 6.4h-2.4"></path>
+              </svg>
+            </span>
+            <span class="theme-toggle__thumb"></span>
+          </span>
+          <span class="sr-only">Toggle dark and light mode</span>
         </button>
 
         <button
@@ -397,105 +412,95 @@
         <h2>The people behind Pincraft.</h2>
         <p>Meet the team members contributing to the design, development, and delivery of Pincraft.</p>
       </div>
-      <div class="members-grid">
-        <article
-          class="member-card"
-          data-reveal
-          tabindex="0"
-          role="button"
-          aria-haspopup="dialog"
-          aria-controls="member-modal"
-          data-member-name="Member 1"
-          data-member-role="Project Lead"
-          data-member-bio="Placeholder bio for Member 1. Leads planning, direction, and overall coordination for the Pincraft project."
-          data-member-link="https://example.com/member-1"
-        >
-          <img src="assets/member-1.jpg" alt="Profile placeholder for Member 1">
-          <div class="member-card__body">
+      <div class="members-list">
+        <article class="member-showcase" data-reveal>
+          <a class="member-card member-card--link" href="https://example.com/member-1" target="_blank" rel="noreferrer">
+            <img src="assets/member-1.jpg" alt="Profile placeholder for Member 1">
+            <div class="member-card__body">
+              <h3>Member 1</h3>
+              <p>Project Lead</p>
+            </div>
+            <span class="member-card__action">Visit Portfolio</span>
+          </a>
+          <div class="member-details">
+            <p class="eyebrow">Project Lead</p>
             <h3>Member 1</h3>
-            <p>Project Lead</p>
+            <p>Leads planning, product direction, and overall coordination for the Pincraft project from concept to delivery.</p>
+            <p>Helps keep the editor workflow focused, practical, and aligned with the team vision for the full system.</p>
+            <a class="member-details__link" href="https://example.com/member-1" target="_blank" rel="noreferrer">Open Portfolio</a>
           </div>
-          <span class="member-card__action">View Details</span>
         </article>
 
-        <article
-          class="member-card"
-          data-reveal
-          tabindex="0"
-          role="button"
-          aria-haspopup="dialog"
-          aria-controls="member-modal"
-          data-member-name="Member 2"
-          data-member-role="UI Designer"
-          data-member-bio="Placeholder bio for Member 2. Focuses on interface clarity, visual consistency, and user-friendly layout decisions."
-          data-member-link="https://example.com/member-2"
-        >
-          <img src="assets/member-2.jpg" alt="Profile placeholder for Member 2">
-          <div class="member-card__body">
+        <article class="member-showcase" data-reveal>
+          <a class="member-card member-card--link" href="https://example.com/member-2" target="_blank" rel="noreferrer">
+            <img src="assets/member-2.jpg" alt="Profile placeholder for Member 2">
+            <div class="member-card__body">
+              <h3>Member 2</h3>
+              <p>UI Designer</p>
+            </div>
+            <span class="member-card__action">Visit Portfolio</span>
+          </a>
+          <div class="member-details">
+            <p class="eyebrow">UI Designer</p>
             <h3>Member 2</h3>
-            <p>UI Designer</p>
+            <p>Shapes the interface, visual consistency, and the overall design language that makes Pincraft easier to use.</p>
+            <p>Focuses on layout clarity, polished interactions, and a smoother experience across the landing page and editor.</p>
+            <a class="member-details__link" href="https://example.com/member-2" target="_blank" rel="noreferrer">Open Portfolio</a>
           </div>
-          <span class="member-card__action">View Details</span>
         </article>
 
-        <article
-          class="member-card"
-          data-reveal
-          tabindex="0"
-          role="button"
-          aria-haspopup="dialog"
-          aria-controls="member-modal"
-          data-member-name="Member 3"
-          data-member-role="Frontend Developer"
-          data-member-bio="Placeholder bio for Member 3. Builds the responsive interface and interactive website experience for Pincraft."
-          data-member-link="https://example.com/member-3"
-        >
-          <img src="assets/member-3.jpg" alt="Profile placeholder for Member 3">
-          <div class="member-card__body">
+        <article class="member-showcase" data-reveal>
+          <a class="member-card member-card--link" href="https://example.com/member-3" target="_blank" rel="noreferrer">
+            <img src="assets/member-3.jpg" alt="Profile placeholder for Member 3">
+            <div class="member-card__body">
+              <h3>Member 3</h3>
+              <p>Frontend Developer</p>
+            </div>
+            <span class="member-card__action">Visit Portfolio</span>
+          </a>
+          <div class="member-details">
+            <p class="eyebrow">Frontend Developer</p>
             <h3>Member 3</h3>
-            <p>Frontend Developer</p>
+            <p>Builds the responsive website experience and the interactive demo features that help showcase how Pincraft works.</p>
+            <p>Handles interface behavior, live controls, and the small product details that make the demo feel like a real app.</p>
+            <a class="member-details__link" href="https://example.com/member-3" target="_blank" rel="noreferrer">Open Portfolio</a>
           </div>
-          <span class="member-card__action">View Details</span>
         </article>
 
-        <article
-          class="member-card"
-          data-reveal
-          tabindex="0"
-          role="button"
-          aria-haspopup="dialog"
-          aria-controls="member-modal"
-          data-member-name="Member 4"
-          data-member-role="Backend Developer"
-          data-member-bio="Placeholder bio for Member 4. Supports system logic, data handling, and the core functionality behind the workflow."
-          data-member-link="https://example.com/member-4"
-        >
-          <img src="assets/member-4.jpg" alt="Profile placeholder for Member 4">
-          <div class="member-card__body">
+        <article class="member-showcase" data-reveal>
+          <a class="member-card member-card--link" href="https://example.com/member-4" target="_blank" rel="noreferrer">
+            <img src="assets/member-4.jpg" alt="Profile placeholder for Member 4">
+            <div class="member-card__body">
+              <h3>Member 4</h3>
+              <p>Backend Developer</p>
+            </div>
+            <span class="member-card__action">Visit Portfolio</span>
+          </a>
+          <div class="member-details">
+            <p class="eyebrow">Backend Developer</p>
             <h3>Member 4</h3>
-            <p>Backend Developer</p>
+            <p>Supports the core logic, data handling, and system behavior that powers the wider Pincraft workflow behind the interface.</p>
+            <p>Works on the technical foundation needed for saving projects, managing data, and expanding the editor experience.</p>
+            <a class="member-details__link" href="https://example.com/member-4" target="_blank" rel="noreferrer">Open Portfolio</a>
           </div>
-          <span class="member-card__action">View Details</span>
         </article>
 
-        <article
-          class="member-card"
-          data-reveal
-          tabindex="0"
-          role="button"
-          aria-haspopup="dialog"
-          aria-controls="member-modal"
-          data-member-name="Member 5"
-          data-member-role="QA and Documentation"
-          data-member-bio="Placeholder bio for Member 5. Helps review quality, test workflows, and prepare clear project documentation."
-          data-member-link="https://example.com/member-5"
-        >
-          <img src="assets/member-5.jpg" alt="Profile placeholder for Member 5">
-          <div class="member-card__body">
+        <article class="member-showcase" data-reveal>
+          <a class="member-card member-card--link" href="https://example.com/member-5" target="_blank" rel="noreferrer">
+            <img src="assets/member-5.jpg" alt="Profile placeholder for Member 5">
+            <div class="member-card__body">
+              <h3>Member 5</h3>
+              <p>QA and Documentation</p>
+            </div>
+            <span class="member-card__action">Visit Portfolio</span>
+          </a>
+          <div class="member-details">
+            <p class="eyebrow">QA and Documentation</p>
             <h3>Member 5</h3>
-            <p>QA and Documentation</p>
+            <p>Reviews workflows, checks usability, and helps document the project so the system is easier to understand and maintain.</p>
+            <p>Supports quality assurance, testing passes, and clearer references for both the app experience and the team process.</p>
+            <a class="member-details__link" href="https://example.com/member-5" target="_blank" rel="noreferrer">Open Portfolio</a>
           </div>
-          <span class="member-card__action">View Details</span>
         </article>
       </div>
     </section>
@@ -523,34 +528,31 @@
   </main>
 
   <div
-    class="member-modal"
-    id="member-modal"
+    class="download-modal"
+    id="download-modal"
     aria-hidden="true"
     role="dialog"
     aria-modal="true"
-    aria-labelledby="member-modal-title"
+    aria-labelledby="download-modal-title"
   >
-    <div class="member-modal__backdrop" data-close-modal="true"></div>
-    <div class="member-modal__panel" role="document">
-      <button type="button" class="member-modal__close" aria-label="Close member details">
+    <div class="download-modal__backdrop" data-close-download-modal="true"></div>
+    <div class="download-modal__panel" role="document">
+      <button type="button" class="download-modal__close" aria-label="Close download prompt">
         Close
       </button>
-      <div class="member-modal__content">
-        <p class="eyebrow">Member Details</p>
-        <h2 id="member-modal-title">Member 1</h2>
-        <p class="member-modal__role">Project Lead</p>
-        <p class="member-modal__bio">
-          Placeholder bio for Member 1. Leads planning, direction, and overall coordination for the
-          Pincraft project.
+      <div class="download-modal__content">
+        <p class="eyebrow">Full Experience</p>
+        <h2 id="download-modal-title">Unlock print tools in the full Pincraft app.</h2>
+        <p>
+          The browser demo is great for exploring the editor, but the complete print workflow,
+          export flow, and full layout tools are available in the downloadable system.
         </p>
-        <a
-          class="member-modal__link"
-          href="https://example.com/member-1"
-          target="_blank"
-          rel="noreferrer"
-        >
-          View Portfolio
-        </a>
+        <div class="download-modal__actions">
+          <a class="download-modal__primary" href="#download" data-close-download-modal="true">Download Pincraft</a>
+          <button type="button" class="download-modal__secondary" data-close-download-modal="true">
+            Keep Exploring
+          </button>
+        </div>
       </div>
     </div>
   </div>
