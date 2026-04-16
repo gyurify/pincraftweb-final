@@ -7,12 +7,22 @@ const navPanel = document.querySelector(".nav-actions");
 const navMenu = document.querySelector(".nav-menu");
 const navLinks = Array.from(document.querySelectorAll('.nav-menu a[href^="#"]'));
 const previewCards = Array.from(document.querySelectorAll(".preview-card"));
+const previewImages = Array.from(document.querySelectorAll(".preview-media img"));
 const memberImages = Array.from(document.querySelectorAll(".member-card__media img"));
 const revealElements = Array.from(document.querySelectorAll("[data-reveal]"));
+const previewModal = document.querySelector("#preview-modal");
+const previewModalClose = document.querySelector(".preview-modal__close");
+const previewModalMedia = document.querySelector(".preview-modal__media");
+const previewModalImage = document.querySelector("[data-preview-modal-image]");
+const previewModalVideo = document.querySelector("[data-preview-modal-video]");
+const previewModalSource = document.querySelector("[data-preview-modal-source]");
+const previewModalTitle = document.querySelector("[data-preview-modal-title]");
+const previewModalDescription = document.querySelector("[data-preview-modal-description]");
 const downloadModal = document.querySelector("#download-modal");
 const downloadModalClose = document.querySelector(".download-modal__close");
 const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+let activePreviewTrigger = null;
 let activeDownloadTrigger = null;
 
 // Persist the chosen theme and keep the dropdown nav state in sync.
@@ -159,7 +169,146 @@ const closeOtherPreviews = (currentCard) => {
   });
 };
 
-// Desktop hover and mobile tap share the same preview state toggles.
+const syncPreviewMediaState = (image) => {
+  const media = image.closest(".preview-media");
+  const card = image.closest(".preview-card");
+  const label = card?.querySelector(".preview-caption h3")?.textContent?.trim() ?? "Preview";
+  const video = media?.querySelector("video");
+  const hasReadyVideo = Boolean(video && video.readyState >= 2 && !video.error);
+
+  if (!media) {
+    return;
+  }
+
+  media.dataset.previewLabel = label;
+  media.classList.toggle("is-fallback", image.naturalWidth === 0);
+  media.classList.toggle("is-video-ready", hasReadyVideo);
+};
+
+const initPreviewMediaFallbacks = () => {
+  previewImages.forEach((image) => {
+    const media = image.closest(".preview-media");
+    const video = media?.querySelector("video");
+    const updateState = () => {
+      syncPreviewMediaState(image);
+    };
+
+    image.addEventListener("load", updateState);
+    image.addEventListener("error", updateState);
+    video?.addEventListener("loadeddata", updateState);
+    video?.addEventListener("canplay", updateState);
+    video?.addEventListener("error", updateState);
+    updateState();
+  });
+};
+
+const pausePreviewModalVideo = () => {
+  if (!previewModalVideo) {
+    return;
+  }
+
+  previewModalVideo.pause();
+  previewModalVideo.currentTime = 0;
+};
+
+const playPreviewModalVideo = () => {
+  if (!previewModalVideo) {
+    return;
+  }
+
+  const playPromise = previewModalVideo.play();
+
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {});
+  }
+};
+
+const isPreviewModalOpen = () => previewModal?.classList.contains("is-open");
+
+const openPreviewModal = (card, trigger = null) => {
+  if (!previewModal || !card) {
+    return;
+  }
+
+  const media = card.querySelector(".preview-media");
+  const title = card.querySelector(".preview-caption h3")?.textContent?.trim() ?? "Screen Preview";
+  const description = card.querySelector(".preview-caption p")?.textContent?.trim() ?? "";
+  const image = card.querySelector(".preview-media img");
+  const videoSource = card.querySelector(".preview-media source");
+  const imageSrc = image?.currentSrc || image?.getAttribute("src") || "";
+  const imageAlt = image?.getAttribute("alt") || `${title} full preview`;
+  const videoSrc = videoSource?.getAttribute("src") || "";
+  const imageFallback = media?.classList.contains("is-fallback") ?? false;
+  const videoReady = media?.classList.contains("is-video-ready") ?? false;
+
+  activePreviewTrigger = trigger instanceof HTMLElement ? trigger : null;
+
+  if (previewModalTitle) {
+    previewModalTitle.textContent = title;
+  }
+
+  if (previewModalDescription) {
+    previewModalDescription.textContent = description;
+  }
+
+  if (previewModalImage) {
+    previewModalImage.src = imageSrc;
+    previewModalImage.alt = imageAlt;
+  }
+
+  if (previewModalMedia) {
+    previewModalMedia.dataset.previewLabel = title;
+    previewModalMedia.classList.toggle("is-fallback", imageFallback);
+    previewModalMedia.classList.toggle("is-video-ready", videoReady);
+  }
+
+  if (previewModalVideo && previewModalSource) {
+    previewModalVideo.poster = imageSrc;
+    previewModalSource.src = videoReady ? videoSrc : "";
+    previewModalVideo.load();
+  }
+
+  previewCards.forEach((previewCard) => {
+    setPreviewState(previewCard, false);
+  });
+
+  previewModal.classList.add("is-open");
+  previewModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  previewModalClose?.focus();
+
+  if (videoReady) {
+    playPreviewModalVideo();
+  }
+};
+
+const closePreviewModal = () => {
+  if (!previewModal || !isPreviewModalOpen()) {
+    return;
+  }
+
+  const triggerToRestore = activePreviewTrigger;
+
+  previewModal.classList.remove("is-open");
+  previewModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+  pausePreviewModalVideo();
+
+  if (previewModalSource) {
+    previewModalSource.src = "";
+  }
+
+  if (previewModalVideo) {
+    previewModalVideo.load();
+  }
+
+  previewModalMedia?.classList.remove("is-fallback", "is-video-ready");
+
+  activePreviewTrigger = null;
+  triggerToRestore?.focus();
+};
+
+// Desktop hover enlarges the card, mobile tap expands it in place, and click opens a larger modal.
 const bindPreviewInteractions = () => {
   previewCards.forEach((card) => {
     const toggle = card.querySelector(".preview-toggle");
@@ -184,28 +333,9 @@ const bindPreviewInteractions = () => {
       setPreviewState(card, false);
     });
 
-    card.addEventListener("focusin", () => {
-      if (!hoverQuery.matches) {
-        return;
-      }
-
-      setPreviewState(card, true);
-    });
-
-    card.addEventListener("focusout", () => {
-      requestAnimationFrame(() => {
-        if (!hoverQuery.matches) {
-          return;
-        }
-
-        if (!card.matches(":focus-within") && !card.classList.contains("is-active")) {
-          setPreviewState(card, false);
-        }
-      });
-    });
-
     toggle.addEventListener("click", () => {
       if (hoverQuery.matches) {
+        openPreviewModal(card, toggle);
         return;
       }
 
@@ -213,6 +343,24 @@ const bindPreviewInteractions = () => {
       closeOtherPreviews(card);
       setPreviewState(card, nextState);
     });
+  });
+};
+
+const bindPreviewModalInteractions = () => {
+  previewModalClose?.addEventListener("click", () => {
+    closePreviewModal();
+  });
+
+  previewModal?.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    if (target.closest("[data-close-preview-modal='true']")) {
+      closePreviewModal();
+    }
   });
 };
 
@@ -1375,6 +1523,8 @@ setTheme(getPreferredTheme());
 syncMenuState();
 updateActiveLink();
 bindPreviewInteractions();
+bindPreviewModalInteractions();
+initPreviewMediaFallbacks();
 initMemberImageFallbacks();
 bindDownloadModalInteractions();
 initRevealAnimations();
@@ -1422,6 +1572,7 @@ window.addEventListener(
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeMenu();
+    closePreviewModal();
     closeDownloadModal();
   }
 });

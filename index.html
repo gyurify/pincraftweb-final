@@ -51,6 +51,8 @@
           <li><a href="#preview">Preview</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#members">Members</a></li>
+          <li><a href="#why-use">Why Use</a></li>
+          <li><a href="#faq">FAQ</a></li>
           <li><a href="#download">Download</a></li>
         </ul>
       </div>
@@ -296,8 +298,8 @@
         <p class="eyebrow">Preview</p>
         <h2>See the main screens before you download.</h2>
         <p>
-          Each preview starts with a screenshot and reveals a short looping video so the workflow
-          is easy to understand at a glance.
+          Hover to inspect a screen more closely on desktop, tap to expand it on mobile, and click
+          for a larger preview when needed.
         </p>
       </div>
       <div class="preview-grid">
@@ -375,13 +377,14 @@
       <div class="about-content" data-reveal>
         <div class="about-copy">
           <p>
-            Pincraft brings the main stages of button pin production into one focused workspace.
-            Instead of jumping between separate steps, users can manage projects, build layouts,
-            review previews, and prepare output with a smoother process from start to finish.
+            Pincraft brings button pin planning, design, preview, and print preparation into one
+            focused workspace. Instead of jumping between separate steps, users can manage
+            projects, build layouts, review previews, and prepare output through one smoother
+            process from start to finish.
           </p>
           <p>
             The goal is to make button pin layout work easier to understand and more efficient to
-            complete, while keeping the interface clean, practical, and ready for real production
+            complete while keeping the interface clean, practical, and ready for real production
             use.
           </p>
         </div>
@@ -505,6 +508,81 @@
       </div>
     </section>
 
+    <section id="why-use" class="section trust-section">
+      <div class="section-heading trust-heading" data-reveal>
+        <p class="eyebrow">Why Use Pincraft</p>
+        <h2>Built for a more confident button pin workflow.</h2>
+        <p>
+          Pincraft is designed to feel practical in real use, from live editing to print
+          preparation and repeat design work.
+        </p>
+      </div>
+      <div class="trust-grid">
+        <article class="trust-card" data-reveal>
+          <h3>Live editor workflow</h3>
+          <p>
+            Arrange images and text directly in the button circle, adjust layers quickly, and see
+            changes immediately as you work.
+          </p>
+        </article>
+        <article class="trust-card" data-reveal>
+          <h3>Print-ready layout focus</h3>
+          <p>
+            Prepare cleaner output with tools aimed at button pin layout work instead of relying on
+            a generic design process.
+          </p>
+        </article>
+        <article class="trust-card" data-reveal>
+          <h3>Real-size desktop workflow</h3>
+          <p>
+            Build around practical sizing, saved designs, and a desktop setup that fits repeated
+            production work more comfortably.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">FAQ</p>
+        <h2>Quick answers before you download.</h2>
+        <p>
+          These are the most common questions users ask before trying the full Pincraft desktop
+          experience.
+        </p>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item" data-reveal>
+          <summary>Is Pincraft browser-based or desktop?</summary>
+          <p>
+            Pincraft is built as a Windows desktop app. This website includes a lightweight browser
+            demo so users can preview the editor workflow before installing the full system.
+          </p>
+        </details>
+        <details class="faq-item" data-reveal>
+          <summary>Can I save multiple designs?</summary>
+          <p>
+            Yes. The full desktop experience is designed for saving and reopening multiple button
+            pin layouts so projects can be reviewed, updated, and reused more easily.
+          </p>
+        </details>
+        <details class="faq-item" data-reveal>
+          <summary>Can I print directly from Pincraft?</summary>
+          <p>
+            Yes. Pincraft is intended to support print-ready layout preparation in the full app so
+            you can move from editing to output with fewer extra steps.
+          </p>
+        </details>
+        <details class="faq-item" data-reveal>
+          <summary>Who is Pincraft best for?</summary>
+          <p>
+            It is best suited for users who regularly prepare button pin layouts and want a clearer
+            workflow for arranging, previewing, saving, and preparing output.
+          </p>
+        </details>
+      </div>
+    </section>
+
     <section id="download" class="section download-section">
       <div class="section-heading" data-reveal>
         <p class="eyebrow">Download</p>
@@ -531,12 +609,41 @@
           </div>
         </div>
         <div class="download-actions">
-          <a href="#download" class="download-button" aria-label="Download Pincraft for Windows desktop">Download Pincraft</a>
-          <p class="download-caption">Built for Windows PCs and button pin production work.</p>
+          <a href="assets/Pincraft-Setup.exe" class="download-button" aria-label="Download Pincraft">Download Pincraft</a>
+          <p class="download-caption">Use this button for your Drive link so users can download the full Pincraft files directly.</p>
         </div>
       </div>
     </section>
   </main>
+
+  <div
+    class="preview-modal"
+    id="preview-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="preview-modal-title"
+  >
+    <div class="preview-modal__backdrop" data-close-preview-modal="true"></div>
+    <div class="preview-modal__panel" role="document">
+      <button type="button" class="preview-modal__close" aria-label="Close full preview">
+        Close
+      </button>
+      <div class="preview-modal__content">
+        <div class="preview-modal__media">
+          <img src="" alt="" data-preview-modal-image>
+          <video muted loop playsinline preload="metadata" data-preview-modal-video>
+            <source src="" type="video/mp4" data-preview-modal-source>
+          </video>
+        </div>
+        <div class="preview-modal__copy">
+          <p class="eyebrow">Full Preview</p>
+          <h2 id="preview-modal-title" data-preview-modal-title>Screen Preview</h2>
+          <p data-preview-modal-description></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div
     class="download-modal"
@@ -559,7 +666,7 @@
           export flow, and full layout tools are available in the downloadable system.
         </p>
         <div class="download-modal__actions">
-          <a class="download-modal__primary" href="#download" data-close-download-modal="true">Download Pincraft</a>
+          <a class="download-modal__primary" href="assets/Pincraft-Setup.exe" data-close-download-modal="true">Download Pincraft</a>
           <button type="button" class="download-modal__secondary" data-close-download-modal="true">
             Keep Exploring
           </button>
