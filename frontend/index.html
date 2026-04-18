@@ -7,8 +7,10 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- header and navigation -->
   <header class="site-header">
     <nav class="navbar" aria-label="Primary">
+      <!-- href="#home" jumps to the section that has id="home" -->
       <a class="brand" href="#home">Pincraft</a>
 
       <div class="navbar-controls">
@@ -54,6 +56,7 @@
           <li><a href="#why-use">Why Use</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#download">Download</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
     </nav>
@@ -61,6 +64,7 @@
 
   <main>
     <section id="home" class="section home-section">
+      <!-- data-reveal is a custom data attribute that javascript uses for scroll animation -->
       <div class="section-content hero-content" data-reveal>
         <p class="eyebrow">Button Pin Layout System</p>
         <h1>Pincraft</h1>
@@ -101,6 +105,7 @@
       </div>
     </section>
 
+    <!-- browser demo section -->
     <section id="demo" class="section demo-section">
       <div class="section-heading" data-reveal>
         <p class="eyebrow">Try It Live</p>
@@ -111,6 +116,7 @@
           result before downloading the full app.
         </p>
       </div>
+      <!-- data-demo-action gives each toolbar button a small action name for javascript -->
       <div class="demo-shell" data-reveal>
         <div class="demo-toolbar" role="toolbar" aria-label="Interactive Pincraft editor tools">
           <button type="button" class="demo-tool" data-demo-action="save">Save</button>
@@ -146,6 +152,7 @@
                 <span data-demo-active-name>Text 1</span>
               </p>
 
+              <!-- data-demo-input lets javascript find the right control for the active layer -->
               <label class="demo-field" data-demo-field="text">
                 <span>Text</span>
                 <input type="text" data-demo-input="text" value="Text 1">
@@ -210,6 +217,7 @@
           </aside>
         </div>
 
+        <!-- this hidden input is clicked by javascript when the upload button is used -->
         <input class="demo-upload-input" data-demo-upload type="file" accept="image/*" hidden>
       </div>
     </section>
@@ -293,6 +301,7 @@
       </div>
     </section>
 
+    <!-- preview cards with hover videos -->
     <section id="preview" class="section preview-section">
       <div class="section-heading" data-reveal>
         <p class="eyebrow">Preview</p>
@@ -614,8 +623,54 @@
         </div>
       </div>
     </section>
+
+    <!-- static contact section placed at the end of the website -->
+    <section id="contact" class="section contact-section">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">Contact Us</p>
+        <h2>Need to reach the pincraft team?</h2>
+        <p>
+          This contact section is static for now. You can replace the details below later with
+          your real project email, phone number, social links, or a working contact form.
+        </p>
+      </div>
+      <div class="contact-content" data-reveal>
+        <div class="contact-copy">
+          <p class="contact-lead">We are open to questions, feedback, and project inquiries.</p>
+          <p>
+            If you want to ask about the website, the desktop app, or the live trial, this area
+            can be used as your team contact space.
+          </p>
+          <p class="contact-note">
+            For now, these are placeholder details so your group has a complete contact us section
+            at the end of the page.
+          </p>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-item">
+            <span class="contact-item__label">email</span>
+            <p>pincraft@example.com</p>
+          </div>
+          <div class="contact-item">
+            <span class="contact-item__label">phone</span>
+            <p>+63 900 000 0000</p>
+          </div>
+          <div class="contact-item">
+            <span class="contact-item__label">location</span>
+            <p>your campus, office, or project room</p>
+          </div>
+          <div class="contact-item">
+            <span class="contact-item__label">hours</span>
+            <p>monday to friday, 9:00 am to 5:00 pm</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
+  <!-- modal used for larger preview media -->
+  <!-- role, aria-modal, and aria-labelledby help screen readers understand the modal -->
   <div
     class="preview-modal"
     id="preview-modal"
@@ -641,6 +696,7 @@
     </div>
   </div>
 
+  <!-- modal used when the demo print button asks users to download the app -->
   <div
     class="download-modal"
     id="download-modal"

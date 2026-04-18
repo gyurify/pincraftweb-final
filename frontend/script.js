@@ -1,5 +1,7 @@
+// theme, navigation, preview cards, and modal setup
 const THEME_KEY = "pincraft-theme";
 const root = document.documentElement;
+// queryselector uses css selectors; queryselectorall returns a nodelist, so array.from makes it easier to loop with array methods
 const navbar = document.querySelector(".navbar");
 const themeToggle = document.querySelector(".theme-toggle");
 const menuToggle = document.querySelector(".menu-toggle");
@@ -18,13 +20,15 @@ const previewModalSource = document.querySelector("[data-preview-modal-source]")
 const previewModalTitle = document.querySelector("[data-preview-modal-title]");
 const downloadModal = document.querySelector("#download-modal");
 const downloadModalClose = document.querySelector(".download-modal__close");
+// matchmedia lets javascript react to css-like conditions such as hover support and reduced motion
 const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 let activePreviewTrigger = null;
 let activeDownloadTrigger = null;
 
-// Persist the chosen theme and keep the dropdown nav state in sync.
+// persist the chosen theme and keep the dropdown nav state in sync
 const getStoredTheme = () => {
+  // try/catch keeps the page from breaking if localstorage is blocked by the browser
   try {
     const value = localStorage.getItem(THEME_KEY);
     return value === "light" || value === "dark" ? value : null;
@@ -52,6 +56,7 @@ const getPreferredTheme = () => {
 const setTheme = (theme) => {
   const nextTheme = theme === "dark" ? "light" : "dark";
 
+  // dataset.theme writes to data-theme on the html tag, which css reads with selectors like html[data-theme="dark"]
   root.dataset.theme = theme;
 
   if (themeToggle) {
@@ -62,6 +67,7 @@ const setTheme = (theme) => {
   }
 };
 
+// optional chaining ?. safely stops if menuToggle does not exist
 const isMenuOpen = () => menuToggle?.getAttribute("aria-expanded") === "true";
 
 const syncMenuState = () => {
@@ -114,6 +120,7 @@ const updateActiveLink = () => {
 };
 
 const playMedia = (media) => {
+  // media?.play?.() only runs if the element and its play function both exist
   const playPromise = media?.play?.();
   playPromise?.catch?.(() => {});
 };
@@ -143,6 +150,7 @@ const bindModalInteractions = (modal, closeButton, close, closeSelector) => {
   modal?.addEventListener("click", (event) => {
     const target = event.target;
 
+    // closest() walks up the html tree so one listener can handle nested modal clicks
     if (target instanceof Element && target.closest(closeSelector)) {
       close();
     }
@@ -183,6 +191,7 @@ const setPreviewState = (card, active) => {
 const syncPreviewMediaState = (image) => {
   const media = image.closest(".preview-media");
   const card = image.closest(".preview-card");
+  // ?? gives a fallback only when the left side is null or undefined
   const label = card?.querySelector(".preview-caption h3")?.textContent?.trim() ?? "Preview";
   const video = media?.querySelector("video");
   const hasReadyVideo = Boolean(video && video.readyState >= 2 && !video.error);
@@ -279,7 +288,7 @@ const closePreviewModal = () => {
   triggerToRestore?.focus();
 };
 
-// Desktop hover enlarges the card and plays the preview video.
+// desktop hover enlarges the card and plays the preview video
 const bindPreviewInteractions = () => {
   previewCards.forEach((card) => {
     card.addEventListener("mouseenter", () => {
@@ -352,7 +361,7 @@ const hideRevealElement = (element) => {
   element.classList.remove("is-visible");
 };
 
-// Reveal elements when they enter the viewport and reset them when they leave it.
+// reveal elements when they enter the viewport and reset them when they leave it
 const initRevealAnimations = () => {
   if (!revealElements.length) {
     return;
@@ -368,6 +377,7 @@ const initRevealAnimations = () => {
 
   root.classList.add("reveal-ready");
 
+  // intersectionobserver is more efficient than manually checking scroll position for every element
   const revealObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -398,6 +408,7 @@ const initRevealAnimations = () => {
   });
 };
 
+// demo editor state, helpers, and toolbar actions
 const DEMO_STORAGE_KEY = "pincraft-demo-layout";
 const demoShell = document.querySelector(".demo-shell");
 const demoToolbar = document.querySelector(".demo-toolbar");
@@ -1118,6 +1129,7 @@ const initDemoEditor = () => {
     print: (trigger) => printDemoEditor(trigger),
   };
 
+  // event delegation: one click listener checks data-demo-action instead of adding a listener to every button
   demoToolbar.addEventListener("click", (event) => {
     const trigger = event.target instanceof Element ? event.target.closest("[data-demo-action]") : null;
     const action = trigger?.getAttribute("data-demo-action");
@@ -1134,6 +1146,7 @@ const initDemoEditor = () => {
       return;
     }
 
+    // filereader turns the chosen local file into a data url so the demo can show it immediately
     const reader = new FileReader();
 
     reader.addEventListener("load", () => {
@@ -1405,6 +1418,7 @@ const initDemoEditor = () => {
   });
 };
 
+// start the site features after the dom is ready enough for direct queries
 setTheme(getPreferredTheme());
 syncMenuState();
 updateActiveLink();
