@@ -630,41 +630,75 @@
         <p class="eyebrow">Contact Us</p>
         <h2>Need to reach the pincraft team?</h2>
         <p>
-          This contact section is static for now. You can replace the details below later with
-          your real project email, phone number, social links, or a working contact form.
+          This contact section is static for now. You can replace the details and the form below
+          later with your real project email, phone number, social links, or a working contact
+          system.
         </p>
       </div>
       <div class="contact-content" data-reveal>
-        <div class="contact-copy">
-          <p class="contact-lead">We are open to questions, feedback, and project inquiries.</p>
-          <p>
-            If you want to ask about the website, the desktop app, or the live trial, this area
-            can be used as your team contact space.
-          </p>
-          <p class="contact-note">
-            For now, these are placeholder details so your group has a complete contact us section
-            at the end of the page.
-          </p>
+        <div class="contact-info">
+          <div class="contact-copy">
+            <p class="contact-lead">We are open to questions, feedback, and project inquiries.</p>
+            <p>
+              If you want to ask about the website, the desktop app, or the live trial, this area
+              can be used as your team contact space.
+            </p>
+            <p class="contact-note">
+              For now, these are placeholder details so your group has a complete contact us
+              section at the end of the page.
+            </p>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-item">
+              <span class="contact-item__label">email</span>
+              <p>pincraft@example.com</p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-item__label">phone</span>
+              <p>+63 900 000 0000</p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-item__label">location</span>
+              <p>your campus, office, or project room</p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-item__label">hours</span>
+              <p>monday to friday, 9:00 am to 5:00 pm</p>
+            </div>
+          </div>
         </div>
 
-        <div class="contact-card">
-          <div class="contact-item">
-            <span class="contact-item__label">email</span>
-            <p>pincraft@example.com</p>
+        <!-- static form for layout only -->
+        <form class="contact-form" action="#" method="post">
+          <p class="contact-form__eyebrow">Contact Us!</p>
+          <h3>Send us a message</h3>
+
+          <label class="contact-form__field">
+            <span>Name</span>
+            <input type="text" name="name" placeholder="your name">
+          </label>
+
+          <label class="contact-form__field">
+            <span>Email</span>
+            <input type="email" name="email" placeholder="you@example.com">
+          </label>
+
+          <label class="contact-form__field">
+            <span>Subject</span>
+            <input type="text" name="subject" placeholder="what is this about?">
+          </label>
+
+          <label class="contact-form__field">
+            <span>Message</span>
+            <textarea name="message" rows="5" placeholder="write your message here"></textarea>
+          </label>
+
+          <div class="contact-form__actions">
+            <button type="button" class="contact-form__button">Send Message</button>
+            <p class="contact-form__note">this form is static for now and doesn't submit yet.</p>
           </div>
-          <div class="contact-item">
-            <span class="contact-item__label">phone</span>
-            <p>+63 900 000 0000</p>
-          </div>
-          <div class="contact-item">
-            <span class="contact-item__label">location</span>
-            <p>your campus, office, or project room</p>
-          </div>
-          <div class="contact-item">
-            <span class="contact-item__label">hours</span>
-            <p>monday to friday, 9:00 am to 5:00 pm</p>
-          </div>
-        </div>
+        </form>
       </div>
     </section>
   </main>
