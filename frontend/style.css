@@ -1376,6 +1376,7 @@ html[data-theme="light"] .theme-toggle__thumb {
 .preview-modal {
   position: fixed;
   inset: 0;
+  z-index: 1200;
   display: grid;
   place-items: center;
   padding: clamp(0.75rem, 2vw, 1.25rem);
@@ -1401,6 +1402,8 @@ html[data-theme="light"] .theme-toggle__thumb {
 .preview-modal__panel {
   position: relative;
   z-index: 1;
+  display: grid;
+  gap: var(--space-3);
   width: min(100%, 70rem);
   max-height: calc(100dvh - clamp(1.5rem, 4vw, 2.5rem));
   padding: clamp(0.9rem, 2.5vw, 1.35rem);
@@ -1427,11 +1430,11 @@ html[data-theme="light"] .theme-toggle__thumb {
   justify-content: center;
   width: fit-content;
   min-height: 2.75rem;
-  position: sticky;
-  top: 0;
+  position: absolute;
+  top: clamp(0.85rem, 2vw, 1.15rem);
+  right: clamp(0.85rem, 2vw, 1.15rem);
   z-index: 2;
-  margin-left: auto;
-  margin-bottom: var(--space-3);
+  margin: 0;
   padding: 0.8rem 1rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-color);
@@ -1447,7 +1450,7 @@ html[data-theme="light"] .theme-toggle__thumb {
 .preview-modal__header {
   display: grid;
   gap: 0.45rem;
-  margin-bottom: var(--space-3);
+  padding-right: clamp(5rem, 8vw, 6.5rem);
 }
 
 .preview-modal__eyebrow {
@@ -1463,14 +1466,14 @@ html[data-theme="light"] .theme-toggle__thumb {
 }
 
 .preview-modal__header p:last-child {
-  max-width: 42ch;
+  max-width: none;
   margin: 0;
 }
 
 .preview-modal__content {
   display: grid;
   min-width: 0;
-  gap: var(--space-3);
+  align-self: start;
 }
 
 .preview-modal__media {
@@ -2008,6 +2011,11 @@ html[data-theme="light"] .theme-toggle__thumb {
   line-height: 1.5;
 }
 
+.download-caption strong {
+  color: var(--text-1);
+  font-weight: 700;
+}
+
 .download-section .download-button {
   position: relative;
   z-index: 1;
@@ -2026,6 +2034,7 @@ html[data-theme="light"] .theme-toggle__thumb {
 .download-modal {
   position: fixed;
   inset: 0;
+  z-index: 1200;
   display: grid;
   place-items: center;
   padding: clamp(0.75rem, 2vw, 1.25rem);
