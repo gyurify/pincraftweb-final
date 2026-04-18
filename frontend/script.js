@@ -4,7 +4,6 @@ const navbar = document.querySelector(".navbar");
 const themeToggle = document.querySelector(".theme-toggle");
 const menuToggle = document.querySelector(".menu-toggle");
 const navPanel = document.querySelector(".nav-actions");
-const navMenu = document.querySelector(".nav-menu");
 const navLinks = Array.from(document.querySelectorAll('.nav-menu a[href^="#"]'));
 const previewCards = Array.from(document.querySelectorAll(".preview-card"));
 const previewImages = Array.from(document.querySelectorAll(".preview-media img"));
@@ -17,7 +16,6 @@ const previewModalImage = document.querySelector("[data-preview-modal-image]");
 const previewModalVideo = document.querySelector("[data-preview-modal-video]");
 const previewModalSource = document.querySelector("[data-preview-modal-source]");
 const previewModalTitle = document.querySelector("[data-preview-modal-title]");
-const previewModalDescription = document.querySelector("[data-preview-modal-description]");
 const downloadModal = document.querySelector("#download-modal");
 const downloadModalClose = document.querySelector(".download-modal__close");
 const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -115,29 +113,55 @@ const updateActiveLink = () => {
   });
 };
 
-const pausePreview = (card) => {
-  const video = card?.querySelector("video");
-
-  if (!video) {
-    return;
-  }
-
-  video.pause();
-  video.currentTime = 0;
+const playMedia = (media) => {
+  const playPromise = media?.play?.();
+  playPromise?.catch?.(() => {});
 };
 
-const playPreview = (card) => {
-  const video = card?.querySelector("video");
-
-  if (!video) {
+const resetMedia = (media) => {
+  if (!media) {
     return;
   }
 
-  const playPromise = video.play();
+  media.pause();
+  media.currentTime = 0;
+};
 
-  if (playPromise && typeof playPromise.catch === "function") {
-    playPromise.catch(() => {});
+const toggleModal = (modal, open) => {
+  if (!modal) {
+    return;
   }
+
+  modal.classList.toggle("is-open", open);
+  modal.setAttribute("aria-hidden", String(!open));
+  document.body.classList.toggle("modal-open", open);
+};
+
+const bindModalInteractions = (modal, closeButton, close, closeSelector) => {
+  closeButton?.addEventListener("click", close);
+
+  modal?.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (target instanceof Element && target.closest(closeSelector)) {
+      close();
+    }
+  });
+};
+
+const initImageStates = (images, updateState, getExtraTargets = () => []) => {
+  images.forEach((image) => {
+    const refresh = () => updateState(image);
+
+    image.addEventListener("load", refresh);
+    image.addEventListener("error", refresh);
+
+    getExtraTargets(image).forEach(([target, events]) => {
+      events.forEach((eventName) => target?.addEventListener(eventName, refresh));
+    });
+
+    refresh();
+  });
 };
 
 const setPreviewState = (card, active) => {
@@ -145,28 +169,15 @@ const setPreviewState = (card, active) => {
     return;
   }
 
-  const toggle = card.querySelector(".preview-toggle");
+  const video = card.querySelector("video");
 
   card.classList.toggle("is-active", active);
 
-  if (toggle) {
-    toggle.setAttribute("aria-pressed", String(active));
-  }
-
   if (active) {
-    playPreview(card);
-    return;
+    playMedia(video);
+  } else {
+    resetMedia(video);
   }
-
-  pausePreview(card);
-};
-
-const closeOtherPreviews = (currentCard) => {
-  previewCards.forEach((card) => {
-    if (card !== currentCard) {
-      setPreviewState(card, false);
-    }
-  });
 };
 
 const syncPreviewMediaState = (image) => {
@@ -186,41 +197,10 @@ const syncPreviewMediaState = (image) => {
 };
 
 const initPreviewMediaFallbacks = () => {
-  previewImages.forEach((image) => {
-    const media = image.closest(".preview-media");
-    const video = media?.querySelector("video");
-    const updateState = () => {
-      syncPreviewMediaState(image);
-    };
-
-    image.addEventListener("load", updateState);
-    image.addEventListener("error", updateState);
-    video?.addEventListener("loadeddata", updateState);
-    video?.addEventListener("canplay", updateState);
-    video?.addEventListener("error", updateState);
-    updateState();
+  initImageStates(previewImages, syncPreviewMediaState, (image) => {
+    const video = image.closest(".preview-media")?.querySelector("video");
+    return [[video, ["loadeddata", "canplay", "error"]]];
   });
-};
-
-const pausePreviewModalVideo = () => {
-  if (!previewModalVideo) {
-    return;
-  }
-
-  previewModalVideo.pause();
-  previewModalVideo.currentTime = 0;
-};
-
-const playPreviewModalVideo = () => {
-  if (!previewModalVideo) {
-    return;
-  }
-
-  const playPromise = previewModalVideo.play();
-
-  if (playPromise && typeof playPromise.catch === "function") {
-    playPromise.catch(() => {});
-  }
 };
 
 const isPreviewModalOpen = () => previewModal?.classList.contains("is-open");
@@ -232,7 +212,6 @@ const openPreviewModal = (card, trigger = null) => {
 
   const media = card.querySelector(".preview-media");
   const title = card.querySelector(".preview-caption h3")?.textContent?.trim() ?? "Screen Preview";
-  const description = card.querySelector(".preview-caption p")?.textContent?.trim() ?? "";
   const image = card.querySelector(".preview-media img");
   const videoSource = card.querySelector(".preview-media source");
   const imageSrc = image?.currentSrc || image?.getAttribute("src") || "";
@@ -245,10 +224,6 @@ const openPreviewModal = (card, trigger = null) => {
 
   if (previewModalTitle) {
     previewModalTitle.textContent = title;
-  }
-
-  if (previewModalDescription) {
-    previewModalDescription.textContent = description;
   }
 
   if (previewModalImage) {
@@ -272,13 +247,11 @@ const openPreviewModal = (card, trigger = null) => {
     setPreviewState(previewCard, false);
   });
 
-  previewModal.classList.add("is-open");
-  previewModal.setAttribute("aria-hidden", "false");
-  document.body.classList.add("modal-open");
+  toggleModal(previewModal, true);
   previewModalClose?.focus();
 
   if (videoReady) {
-    playPreviewModalVideo();
+    playMedia(previewModalVideo);
   }
 };
 
@@ -289,10 +262,8 @@ const closePreviewModal = () => {
 
   const triggerToRestore = activePreviewTrigger;
 
-  previewModal.classList.remove("is-open");
-  previewModal.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("modal-open");
-  pausePreviewModalVideo();
+  toggleModal(previewModal, false);
+  resetMedia(previewModalVideo);
 
   if (previewModalSource) {
     previewModalSource.src = "";
@@ -308,15 +279,9 @@ const closePreviewModal = () => {
   triggerToRestore?.focus();
 };
 
-// Desktop hover enlarges the card, mobile tap expands it in place, and click opens a larger modal.
+// Desktop hover enlarges the card and plays the preview video.
 const bindPreviewInteractions = () => {
   previewCards.forEach((card) => {
-    const toggle = card.querySelector(".preview-toggle");
-
-    if (!toggle) {
-      return;
-    }
-
     card.addEventListener("mouseenter", () => {
       if (!hoverQuery.matches) {
         return;
@@ -332,37 +297,11 @@ const bindPreviewInteractions = () => {
 
       setPreviewState(card, false);
     });
-
-    toggle.addEventListener("click", () => {
-      if (hoverQuery.matches) {
-        openPreviewModal(card, toggle);
-        return;
-      }
-
-      const nextState = !card.classList.contains("is-active");
-      closeOtherPreviews(card);
-      setPreviewState(card, nextState);
-    });
   });
 };
 
-const bindPreviewModalInteractions = () => {
-  previewModalClose?.addEventListener("click", () => {
-    closePreviewModal();
-  });
-
-  previewModal?.addEventListener("click", (event) => {
-    const target = event.target;
-
-    if (!(target instanceof Element)) {
-      return;
-    }
-
-    if (target.closest("[data-close-preview-modal='true']")) {
-      closePreviewModal();
-    }
-  });
-};
+const bindPreviewModalInteractions = () =>
+  bindModalInteractions(previewModal, previewModalClose, closePreviewModal, "[data-close-preview-modal='true']");
 
 const syncMemberImageState = (image) => {
   const media = image.closest(".member-card__media");
@@ -375,15 +314,7 @@ const syncMemberImageState = (image) => {
 };
 
 const initMemberImageFallbacks = () => {
-  memberImages.forEach((image) => {
-    const updateImageState = () => {
-      syncMemberImageState(image);
-    };
-
-    image.addEventListener("load", updateImageState);
-    image.addEventListener("error", updateImageState);
-    updateImageState();
-  });
+  initImageStates(memberImages, syncMemberImageState);
 };
 
 const isDownloadModalOpen = () => downloadModal?.classList.contains("is-open");
@@ -394,9 +325,7 @@ const openDownloadModal = (trigger = null) => {
   }
 
   activeDownloadTrigger = trigger instanceof HTMLElement ? trigger : null;
-  downloadModal.classList.add("is-open");
-  downloadModal.setAttribute("aria-hidden", "false");
-  document.body.classList.add("modal-open");
+  toggleModal(downloadModal, true);
   downloadModalClose?.focus();
 };
 
@@ -407,30 +336,13 @@ const closeDownloadModal = () => {
 
   const triggerToRestore = activeDownloadTrigger;
 
-  downloadModal.classList.remove("is-open");
-  downloadModal.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("modal-open");
+  toggleModal(downloadModal, false);
   activeDownloadTrigger = null;
   triggerToRestore?.focus();
 };
 
-const bindDownloadModalInteractions = () => {
-  downloadModalClose?.addEventListener("click", () => {
-    closeDownloadModal();
-  });
-
-  downloadModal?.addEventListener("click", (event) => {
-    const target = event.target;
-
-    if (!(target instanceof Element)) {
-      return;
-    }
-
-    if (target.closest("[data-close-download-modal='true']")) {
-      closeDownloadModal();
-    }
-  });
-};
+const bindDownloadModalInteractions = () =>
+  bindModalInteractions(downloadModal, downloadModalClose, closeDownloadModal, "[data-close-download-modal='true']");
 
 const showRevealElement = (element) => {
   element.classList.add("is-visible");
@@ -516,6 +428,7 @@ const demoFields = {
   font: document.querySelector('[data-demo-field="font"]'),
   color: document.querySelector('[data-demo-field="color"]'),
 };
+const demoTextKeys = ["text", "font", "color"];
 let demoState = null;
 let demoDrag = null;
 let demoLayerReorder = null;
@@ -599,6 +512,23 @@ const setDemoStatus = (message) => {
 const getDemoLayerById = (layerId) => demoState?.layers.find((layer) => layer.id === layerId) ?? null;
 
 const getSelectedDemoLayer = () => getDemoLayerById(demoState?.selectedId);
+
+const updateSelectedDemoLayer = (updateLayer, options = {}) => {
+  const layer = getSelectedDemoLayer();
+
+  if (!layer || (options.textOnly && layer.type !== "text")) {
+    return null;
+  }
+
+  updateLayer(layer);
+
+  if (options.fit) {
+    fitDemoLayerToCircle(layer);
+  }
+
+  renderDemoEditor();
+  return layer;
+};
 
 const createDemoId = (prefix) => `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2, 7)}`;
 
@@ -865,63 +795,44 @@ const applyDemoLayerStyles = (element, layer) => {
 
 const syncDemoInspector = () => {
   const layer = getSelectedDemoLayer();
+  const isTextLayer = layer?.type === "text";
+
+  if (demoActiveName) {
+    demoActiveName.textContent = layer?.name ?? "None";
+  }
+
+  demoTextKeys.forEach((key) => {
+    if (demoFields[key]) {
+      demoFields[key].hidden = !isTextLayer;
+    }
+  });
 
   if (!layer) {
-    if (demoActiveName) {
-      demoActiveName.textContent = "None";
-    }
-
-    Object.values(demoFields).forEach((field) => {
-      if (field) {
-        field.hidden = true;
-      }
-    });
-
     Object.values(demoInputs).forEach((input) => {
       if (input) {
         input.disabled = input !== demoInputs.background;
       }
     });
 
+    if (demoInputs.background) {
+      demoInputs.background.value = demoState.background;
+    }
+
     return;
   }
 
-  if (demoActiveName) {
-    demoActiveName.textContent = layer.name;
-  }
+  demoTextKeys.forEach((key) => {
+    const input = demoInputs[key];
 
-  const isTextLayer = layer.type === "text";
+    if (!input) {
+      return;
+    }
 
-  if (demoFields.text) {
-    demoFields.text.hidden = !isTextLayer;
-  }
-
-  if (demoFields.font) {
-    demoFields.font.hidden = !isTextLayer;
-  }
-
-  if (demoFields.color) {
-    demoFields.color.hidden = !isTextLayer;
-  }
-
-  if (demoInputs.text) {
-    demoInputs.text.disabled = !isTextLayer;
-    demoInputs.text.value = isTextLayer ? layer.text : "";
-  }
-
-  if (demoInputs.font) {
-    demoInputs.font.disabled = !isTextLayer;
-    demoInputs.font.value = isTextLayer ? layer.font : "Arial, sans-serif";
-  }
-
-  if (demoInputs.color) {
-    demoInputs.color.disabled = !isTextLayer;
-    demoInputs.color.value = isTextLayer ? layer.color : "#2b3648";
-  }
+    input.disabled = !isTextLayer;
+    input.value = isTextLayer ? String(layer[key] ?? "") : "";
+  });
 
   if (demoInputs.size) {
-    demoInputs.size.min = "1";
-    demoInputs.size.max = "100";
     demoInputs.size.value = String(layer.size);
   }
 
@@ -942,7 +853,7 @@ const syncDemoInspector = () => {
   }
 
   if (demoOutputs.size) {
-    demoOutputs.size.textContent = isTextLayer ? `${layer.size}px` : `${layer.size}%`;
+    demoOutputs.size.textContent = `${layer.size}${isTextLayer ? "px" : "%"}`;
   }
 
   if (demoOutputs.rotation) {
@@ -1166,6 +1077,18 @@ const focusDemoLayerTab = (layerId) => {
   });
 };
 
+const bindDemoLayerInput = (key, eventName, updateLayer, options = {}) => {
+  demoInputs[key]?.addEventListener(eventName, (event) => {
+    const control = event.currentTarget;
+
+    if (options.control && !(control instanceof options.control)) {
+      return;
+    }
+
+    updateSelectedDemoLayer((layer) => updateLayer(layer, control), options);
+  });
+};
+
 const initDemoEditor = () => {
   if (!demoShell || !demoToolbar || !demoStage || !demoLayerArea || !demoLayerTabs) {
     return;
@@ -1180,46 +1103,27 @@ const initDemoEditor = () => {
 
   renderDemoEditor();
 
+  if (demoInputs.size) {
+    demoInputs.size.min = "1";
+    demoInputs.size.max = "100";
+  }
+
+  const demoToolbarActions = {
+    save: () => saveDemoState(),
+    load: () => loadDemoState(),
+    upload: () => demoUploadInput?.click(),
+    photo: () => addDemoPhotoLayer(),
+    text: () => addDemoTextLayer(),
+    reset: () => resetDemoEditor(),
+    print: (trigger) => printDemoEditor(trigger),
+  };
+
   demoToolbar.addEventListener("click", (event) => {
     const trigger = event.target instanceof Element ? event.target.closest("[data-demo-action]") : null;
     const action = trigger?.getAttribute("data-demo-action");
 
-    if (!action) {
-      return;
-    }
-
-    if (action === "save") {
-      saveDemoState();
-      return;
-    }
-
-    if (action === "load") {
-      loadDemoState();
-      return;
-    }
-
-    if (action === "upload") {
-      demoUploadInput?.click();
-      return;
-    }
-
-    if (action === "photo") {
-      addDemoPhotoLayer();
-      return;
-    }
-
-    if (action === "text") {
-      addDemoTextLayer();
-      return;
-    }
-
-    if (action === "reset") {
-      resetDemoEditor();
-      return;
-    }
-
-    if (action === "print") {
-      printDemoEditor(trigger);
+    if (action) {
+      demoToolbarActions[action]?.(trigger);
     }
   });
 
@@ -1428,86 +1332,68 @@ const initDemoEditor = () => {
     clearDemoLayerReorderState();
   });
 
-  demoInputs.text?.addEventListener("input", (event) => {
-    const layer = getSelectedDemoLayer();
+  bindDemoLayerInput(
+    "text",
+    "input",
+    (layer, input) => {
+      layer.text = input.value || layer.name;
+    },
+    { control: HTMLInputElement, fit: true, textOnly: true }
+  );
 
-    if (!layer || layer.type !== "text" || !(event.currentTarget instanceof HTMLInputElement)) {
-      return;
-    }
+  bindDemoLayerInput(
+    "font",
+    "change",
+    (layer, select) => {
+      layer.font = select.value;
+    },
+    { control: HTMLSelectElement, fit: true, textOnly: true }
+  );
 
-    layer.text = event.currentTarget.value || layer.name;
-    fitDemoLayerToCircle(layer);
-    renderDemoEditor();
-  });
+  bindDemoLayerInput(
+    "color",
+    "input",
+    (layer, input) => {
+      layer.color = input.value;
+    },
+    { control: HTMLInputElement, textOnly: true }
+  );
 
-  demoInputs.font?.addEventListener("change", (event) => {
-    const layer = getSelectedDemoLayer();
+  bindDemoLayerInput(
+    "size",
+    "input",
+    (layer, input) => {
+      layer.size = Number(input.value);
+    },
+    { control: HTMLInputElement, fit: true }
+  );
 
-    if (!layer || layer.type !== "text" || !(event.currentTarget instanceof HTMLSelectElement)) {
-      return;
-    }
+  bindDemoLayerInput(
+    "rotation",
+    "input",
+    (layer, input) => {
+      layer.rotation = Number(input.value);
+    },
+    { control: HTMLInputElement }
+  );
 
-    layer.font = event.currentTarget.value;
-    fitDemoLayerToCircle(layer);
-    renderDemoEditor();
-  });
+  bindDemoLayerInput(
+    "stretch",
+    "input",
+    (layer, input) => {
+      layer.stretch = Number(input.value);
+    },
+    { control: HTMLInputElement, fit: true }
+  );
 
-  demoInputs.color?.addEventListener("input", (event) => {
-    const layer = getSelectedDemoLayer();
-
-    if (!layer || layer.type !== "text" || !(event.currentTarget instanceof HTMLInputElement)) {
-      return;
-    }
-
-    layer.color = event.currentTarget.value;
-    renderDemoEditor();
-  });
-
-  demoInputs.size?.addEventListener("input", (event) => {
-    const layer = getSelectedDemoLayer();
-
-    if (!layer || !(event.currentTarget instanceof HTMLInputElement)) {
-      return;
-    }
-
-    layer.size = Number(event.currentTarget.value);
-    fitDemoLayerToCircle(layer);
-    renderDemoEditor();
-  });
-
-  demoInputs.rotation?.addEventListener("input", (event) => {
-    const layer = getSelectedDemoLayer();
-
-    if (!layer || !(event.currentTarget instanceof HTMLInputElement)) {
-      return;
-    }
-
-    layer.rotation = Number(event.currentTarget.value);
-    renderDemoEditor();
-  });
-
-  demoInputs.stretch?.addEventListener("input", (event) => {
-    const layer = getSelectedDemoLayer();
-
-    if (!layer || !(event.currentTarget instanceof HTMLInputElement)) {
-      return;
-    }
-
-    layer.stretch = Number(event.currentTarget.value);
-    fitDemoLayerToCircle(layer);
-    renderDemoEditor();
-  });
-
-  demoInputs.opacity?.addEventListener("input", (event) => {
-    const layer = getSelectedDemoLayer();
-
-    if (!layer || !(event.currentTarget instanceof HTMLInputElement)) {
-      return;
-    }
-
-    layer.opacity = Number(event.currentTarget.value);
-    renderDemoEditor();
-  });
+  bindDemoLayerInput(
+    "opacity",
+    "input",
+    (layer, input) => {
+      layer.opacity = Number(input.value);
+    },
+    { control: HTMLInputElement }
+  );
 
   demoInputs.background?.addEventListener("input", (event) => {
     if (!(event.currentTarget instanceof HTMLInputElement)) {

@@ -298,13 +298,13 @@
         <p class="eyebrow">Preview</p>
         <h2>See the main screens before you download.</h2>
         <p>
-          Hover to inspect a screen more closely on desktop, tap to expand it on mobile, and click
-          for a larger preview when needed.
+          Hover over a screen to inspect it more closely. The preview cards stay simple and
+          non-clickable so the motion feels lighter and cleaner.
         </p>
       </div>
       <div class="preview-grid">
         <article class="preview-card" data-reveal>
-          <button type="button" class="preview-toggle" aria-pressed="false">
+          <div class="preview-toggle">
             <div class="preview-media">
               <img src="assets/login.png" alt="Preview of the Pincraft login screen">
               <video muted loop playsinline preload="metadata">
@@ -315,11 +315,11 @@
               <h3>Login Page</h3>
               <p>Quick access to the system with a simple sign-in experience.</p>
             </div>
-          </button>
+          </div>
         </article>
 
         <article class="preview-card" data-reveal>
-          <button type="button" class="preview-toggle" aria-pressed="false">
+          <div class="preview-toggle">
             <div class="preview-media">
               <img src="assets/home.png" alt="Preview of the Pincraft home dashboard">
               <video muted loop playsinline preload="metadata">
@@ -330,11 +330,11 @@
               <h3>Home Page</h3>
               <p>Overview of tools, project access, and the main working dashboard.</p>
             </div>
-          </button>
+          </div>
         </article>
 
         <article class="preview-card" data-reveal>
-          <button type="button" class="preview-toggle" aria-pressed="false">
+          <div class="preview-toggle">
             <div class="preview-media">
               <img src="assets/editor.png" alt="Preview of the Pincraft button editor">
               <video muted loop playsinline preload="metadata">
@@ -345,11 +345,11 @@
               <h3>Editor Page</h3>
               <p>Workspace for arranging layouts, refining content, and adjusting pin designs.</p>
             </div>
-          </button>
+          </div>
         </article>
 
         <article class="preview-card" data-reveal>
-          <button type="button" class="preview-toggle" aria-pressed="false">
+          <div class="preview-toggle">
             <div class="preview-media">
               <img src="assets/print.png" alt="Preview of the Pincraft print layout screen">
               <video muted loop playsinline preload="metadata">
@@ -360,7 +360,7 @@
               <h3>Print Page</h3>
               <p>Final review area for checking layouts before sending them to print.</p>
             </div>
-          </button>
+          </div>
         </article>
       </div>
     </section>
@@ -629,17 +629,13 @@
       <button type="button" class="preview-modal__close" aria-label="Close full preview">
         Close
       </button>
+      <h2 id="preview-modal-title" class="sr-only" data-preview-modal-title>Screen Preview</h2>
       <div class="preview-modal__content">
         <div class="preview-modal__media">
           <img src="" alt="" data-preview-modal-image>
           <video muted loop playsinline preload="metadata" data-preview-modal-video>
             <source src="" type="video/mp4" data-preview-modal-source>
           </video>
-        </div>
-        <div class="preview-modal__copy">
-          <p class="eyebrow">Full Preview</p>
-          <h2 id="preview-modal-title" data-preview-modal-title>Screen Preview</h2>
-          <p data-preview-modal-description></p>
         </div>
       </div>
     </div>
