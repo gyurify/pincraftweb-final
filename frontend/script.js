@@ -8,21 +8,33 @@ const menuToggle = document.querySelector(".menu-toggle");
 const navPanel = document.querySelector(".nav-actions");
 const navLinks = Array.from(document.querySelectorAll('.nav-menu a[href^="#"]'));
 const previewCards = Array.from(document.querySelectorAll(".preview-card"));
+const previewButtons = Array.from(document.querySelectorAll("[data-preview-trigger]"));
 const previewImages = Array.from(document.querySelectorAll(".preview-media img"));
 const memberImages = Array.from(document.querySelectorAll(".member-card__media img"));
 const revealElements = Array.from(document.querySelectorAll("[data-reveal]"));
 const previewModal = document.querySelector("#preview-modal");
 const previewModalClose = document.querySelector(".preview-modal__close");
+const previewModalPanel = document.querySelector(".preview-modal__panel");
 const previewModalMedia = document.querySelector(".preview-modal__media");
 const previewModalImage = document.querySelector("[data-preview-modal-image]");
 const previewModalVideo = document.querySelector("[data-preview-modal-video]");
 const previewModalSource = document.querySelector("[data-preview-modal-source]");
 const previewModalTitle = document.querySelector("[data-preview-modal-title]");
+const previewModalDescription = document.querySelector("[data-preview-modal-description]");
 const downloadModal = document.querySelector("#download-modal");
 const downloadModalClose = document.querySelector(".download-modal__close");
 // matchmedia lets javascript react to css-like conditions such as hover support and reduced motion
 const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  'video[controls]',
+  '[tabindex]:not([tabindex="-1"])',
+].join(", ");
 let activePreviewTrigger = null;
 let activeDownloadTrigger = null;
 
@@ -134,6 +146,48 @@ const resetMedia = (media) => {
   media.currentTime = 0;
 };
 
+const getFocusableElements = (container) =>
+  Array.from(container?.querySelectorAll(FOCUSABLE_SELECTOR) ?? []).filter((element) => {
+    if (!(element instanceof HTMLElement)) {
+      return false;
+    }
+
+    return !element.hasAttribute("disabled") && !element.getAttribute("aria-hidden");
+  });
+
+const getPreviewParts = (card) => ({
+  media: card?.querySelector(".preview-media"),
+  image: card?.querySelector(".preview-media img"),
+  video: card?.querySelector(".preview-media video"),
+  source: card?.querySelector(".preview-media source"),
+  title: card?.querySelector(".preview-caption h3")?.textContent?.trim() ?? "Screen Preview",
+  description:
+    card?.querySelector(".preview-caption p")?.textContent?.trim() ?? "Watch a larger demo of this screen.",
+});
+
+const getVideoAsset = (source) => source?.dataset.src?.trim() || source?.getAttribute("src") || "";
+
+const ensureVideoLoaded = (video, preload = "metadata") => {
+  if (!video) {
+    return;
+  }
+
+  const source = video.querySelector("source");
+
+  if (!source) {
+    return;
+  }
+
+  const pendingSrc = source.dataset.src?.trim();
+
+  video.preload = preload;
+
+  if (!source.getAttribute("src") && pendingSrc) {
+    source.setAttribute("src", pendingSrc);
+    video.load();
+  }
+};
+
 const toggleModal = (modal, open) => {
   if (!modal) {
     return;
@@ -177,12 +231,16 @@ const setPreviewState = (card, active) => {
     return;
   }
 
-  const video = card.querySelector("video");
+  const { video } = getPreviewParts(card);
 
   card.classList.toggle("is-active", active);
 
   if (active) {
-    playMedia(video);
+    ensureVideoLoaded(video, "auto");
+
+    if (!reducedMotionQuery.matches && video?.readyState >= 2) {
+      playMedia(video);
+    }
   } else {
     resetMedia(video);
   }
@@ -203,6 +261,10 @@ const syncPreviewMediaState = (image) => {
   media.dataset.previewLabel = label;
   media.classList.toggle("is-fallback", image.naturalWidth === 0);
   media.classList.toggle("is-video-ready", hasReadyVideo);
+
+  if (card?.classList.contains("is-active") && hasReadyVideo && !reducedMotionQuery.matches) {
+    playMedia(video);
+  }
 };
 
 const initPreviewMediaFallbacks = () => {
@@ -212,27 +274,117 @@ const initPreviewMediaFallbacks = () => {
   });
 };
 
+const initPreviewVideoObserver = () => {
+  if (!previewCards.length || !("IntersectionObserver" in window)) {
+    return;
+  }
+
+  const previewObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        const card = entry.target;
+
+        if (!(card instanceof HTMLElement)) {
+          return;
+        }
+
+        ensureVideoLoaded(getPreviewParts(card).video, "metadata");
+        observer.unobserve(card);
+      });
+    },
+    {
+      rootMargin: "220px 0px",
+      threshold: 0.08,
+    }
+  );
+
+  previewCards.forEach((card) => {
+    previewObserver.observe(card);
+  });
+};
+
 const isPreviewModalOpen = () => previewModal?.classList.contains("is-open");
+
+const syncPreviewModalMediaState = () => {
+  if (!previewModalMedia || !previewModalVideo || !previewModalSource) {
+    return;
+  }
+
+  const hasReadyVideo = Boolean(
+    previewModalSource.getAttribute("src") &&
+      previewModalVideo.readyState >= 2 &&
+      !previewModalVideo.error
+  );
+
+  previewModalMedia.classList.toggle("is-video-ready", hasReadyVideo);
+
+  if (hasReadyVideo && isPreviewModalOpen() && !reducedMotionQuery.matches) {
+    playMedia(previewModalVideo);
+  }
+};
+
+const trapPreviewModalFocus = (event) => {
+  if (event.key !== "Tab" || !previewModalPanel) {
+    return;
+  }
+
+  const focusableElements = getFocusableElements(previewModalPanel);
+
+  if (!focusableElements.length) {
+    event.preventDefault();
+    previewModalClose?.focus();
+    return;
+  }
+
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+
+  if (event.shiftKey && document.activeElement === firstElement) {
+    event.preventDefault();
+    lastElement.focus();
+  } else if (!event.shiftKey && document.activeElement === lastElement) {
+    event.preventDefault();
+    firstElement.focus();
+  }
+};
+
+const handlePreviewModalKeydown = (event) => {
+  if (!isPreviewModalOpen()) {
+    return;
+  }
+
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closePreviewModal();
+    return;
+  }
+
+  trapPreviewModalFocus(event);
+};
 
 const openPreviewModal = (card, trigger = null) => {
   if (!previewModal || !card) {
     return;
   }
 
-  const media = card.querySelector(".preview-media");
-  const title = card.querySelector(".preview-caption h3")?.textContent?.trim() ?? "Screen Preview";
-  const image = card.querySelector(".preview-media img");
-  const videoSource = card.querySelector(".preview-media source");
+  const { media, image, source, title, description } = getPreviewParts(card);
   const imageSrc = image?.currentSrc || image?.getAttribute("src") || "";
   const imageAlt = image?.getAttribute("alt") || `${title} full preview`;
-  const videoSrc = videoSource?.getAttribute("src") || "";
+  const videoSrc = getVideoAsset(source);
   const imageFallback = media?.classList.contains("is-fallback") ?? false;
-  const videoReady = media?.classList.contains("is-video-ready") ?? false;
 
   activePreviewTrigger = trigger instanceof HTMLElement ? trigger : null;
 
   if (previewModalTitle) {
     previewModalTitle.textContent = title;
+  }
+
+  if (previewModalDescription) {
+    previewModalDescription.textContent = description;
   }
 
   if (previewModalImage) {
@@ -243,12 +395,14 @@ const openPreviewModal = (card, trigger = null) => {
   if (previewModalMedia) {
     previewModalMedia.dataset.previewLabel = title;
     previewModalMedia.classList.toggle("is-fallback", imageFallback);
-    previewModalMedia.classList.toggle("is-video-ready", videoReady);
+    previewModalMedia.classList.remove("is-video-ready");
   }
 
   if (previewModalVideo && previewModalSource) {
     previewModalVideo.poster = imageSrc;
-    previewModalSource.src = videoReady ? videoSrc : "";
+    previewModalVideo.setAttribute("aria-label", `${title} demo video`);
+    previewModalVideo.preload = reducedMotionQuery.matches ? "metadata" : "auto";
+    previewModalSource.setAttribute("src", videoSrc);
     previewModalVideo.load();
   }
 
@@ -257,11 +411,8 @@ const openPreviewModal = (card, trigger = null) => {
   });
 
   toggleModal(previewModal, true);
-  previewModalClose?.focus();
 
-  if (videoReady) {
-    playMedia(previewModalVideo);
-  }
+  previewModalClose?.focus();
 };
 
 const closePreviewModal = () => {
@@ -275,42 +426,81 @@ const closePreviewModal = () => {
   resetMedia(previewModalVideo);
 
   if (previewModalSource) {
-    previewModalSource.src = "";
+    previewModalSource.setAttribute("src", "");
   }
 
   if (previewModalVideo) {
+    previewModalVideo.removeAttribute("poster");
     previewModalVideo.load();
   }
 
   previewModalMedia?.classList.remove("is-fallback", "is-video-ready");
+  previewModalImage?.removeAttribute("src");
+  previewModalImage?.setAttribute("alt", "");
 
   activePreviewTrigger = null;
-  triggerToRestore?.focus();
+
+  if (triggerToRestore instanceof HTMLElement) {
+    triggerToRestore.focus();
+  }
 };
 
-// desktop hover enlarges the card and plays the preview video
+// cards support hover previews on desktop and modal opening on click or tap
 const bindPreviewInteractions = () => {
-  previewCards.forEach((card) => {
-    card.addEventListener("mouseenter", () => {
-      if (!hoverQuery.matches) {
+  previewButtons.forEach((button) => {
+    const card = button.closest(".preview-card");
+
+    if (!card) {
+      return;
+    }
+
+    button.addEventListener("mouseenter", () => {
+      if (!hoverQuery.matches || reducedMotionQuery.matches) {
         return;
       }
 
       setPreviewState(card, true);
     });
 
-    card.addEventListener("mouseleave", () => {
-      if (!hoverQuery.matches || card.matches(":focus-within")) {
+    button.addEventListener("mouseleave", () => {
+      if (!hoverQuery.matches) {
         return;
       }
 
       setPreviewState(card, false);
     });
+
+    button.addEventListener("focus", () => {
+      ensureVideoLoaded(getPreviewParts(card).video, "auto");
+
+      if (!reducedMotionQuery.matches) {
+        setPreviewState(card, true);
+      }
+    });
+
+    button.addEventListener("blur", () => {
+      setPreviewState(card, false);
+    });
+
+    button.addEventListener("pointerdown", () => {
+      ensureVideoLoaded(getPreviewParts(card).video, "metadata");
+    });
+
+    button.addEventListener("click", () => {
+      openPreviewModal(card, button);
+    });
   });
 };
 
-const bindPreviewModalInteractions = () =>
+const bindPreviewModalInteractions = () => {
   bindModalInteractions(previewModal, previewModalClose, closePreviewModal, "[data-close-preview-modal='true']");
+
+  previewModal?.addEventListener("keydown", handlePreviewModalKeydown);
+
+  ["loadeddata", "canplay", "error", "emptied"].forEach((eventName) => {
+    previewModalVideo?.addEventListener(eventName, syncPreviewModalMediaState);
+  });
+};
 
 const syncMemberImageState = (image) => {
   const media = image.closest(".member-card__media");
@@ -1425,6 +1615,7 @@ updateActiveLink();
 bindPreviewInteractions();
 bindPreviewModalInteractions();
 initPreviewMediaFallbacks();
+initPreviewVideoObserver();
 initMemberImageFallbacks();
 bindDownloadModalInteractions();
 initRevealAnimations();
@@ -1478,6 +1669,12 @@ window.addEventListener("keydown", (event) => {
 });
 
 reducedMotionQuery.addEventListener?.("change", () => {
+  previewCards.forEach((card) => {
+    setPreviewState(card, false);
+  });
+
+  syncPreviewModalMediaState();
+
   if (!reducedMotionQuery.matches) {
     return;
   }
