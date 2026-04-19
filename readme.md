@@ -39,7 +39,6 @@ the javascript is split into a few big parts:
 ## important syntax notes
 
 ### html
-
 - `id="home"` gives an element a unique name so links like `href="#home"` can jump to it
 - `class="preview-card"` is used for styling and javascript selection
 - `data-reveal` and `data-demo-action="save"` are custom data attributes that javascript can read through `dataset`
@@ -47,7 +46,6 @@ the javascript is split into a few big parts:
 - `hidden` keeps an element out of normal view, like the file input used by the upload button
 
 ### css
-
 - `:root` stores shared custom properties like `--accent` and `--space-4`
 - `html[data-theme="dark"]` is an attribute selector that applies dark-mode values
 - `var(--accent)` reads a custom property
