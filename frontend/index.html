@@ -11,8 +11,14 @@
   <header class="site-header">
     <nav class="navbar" aria-label="Primary">
       <!-- href="#home" jumps to the section that has id="home" -->
-      <a class="brand" href="#home">Pincraft</a>
-
+      <a class="brand" href="#home" aria-label="Pincraft home">
+        <img
+          src="assets/pincraft-logo.png"
+          alt="Pincraft"
+          class="brand__logo"
+          decoding="async"
+        >
+      </a>
       <div class="navbar-controls">
         <button class="theme-toggle" type="button" aria-label="Toggle dark and light mode">
           <span class="theme-toggle__track" aria-hidden="true">
@@ -67,7 +73,15 @@
       <!-- data-reveal is a custom data attribute that javascript uses for scroll animation -->
       <div class="section-content hero-content" data-reveal>
         <p class="eyebrow">Button Pin Layout System</p>
-        <h1>Pincraft</h1>
+        <div class="hero-brand" aria-hidden="true">
+          <img
+            src="assets/pincraft-logo.png"
+            alt=""
+            class="hero-logo"
+            decoding="async"
+          >
+        </div>
+        <h1 class="sr-only">Pincraft</h1>
         <p class="hero-tagline">Design, edit, and print button pin layouts with ease.</p>
         <p class="hero-description">
           Pincraft helps users build clean, print-ready button pin layouts through a simple
@@ -458,19 +472,19 @@
       </div>
       <div class="members-list">
         <article class="member-showcase" data-reveal>
-          <a class="member-card member-card--link" href="https://example.com/member-1" target="_blank" rel="noreferrer" aria-label="Open Member 1 portfolio">
+          <a class="member-card member-card--link" href="mark.html" target="_blank" rel="noreferrer" aria-label="Open Member 1 portfolio">
             <div class="member-card__media">
-              <img src="assets/member-1.jpg" alt="Profile photo placeholder for Member 1, Project Lead">
-              <span class="member-card__fallback" aria-hidden="true">M1</span>
+              <img src="assets/danica.jpg" alt="Profile photo placeholder for Member 1, Project Lead">
+              <span class="member-card__fallback" aria-hidden="true"></span>
             </div>
             <div class="member-card__body">
-              <h3>Member 1</h3>
-              <p>Project Lead</p>
+              <h3>Danica T. Moyano</h3>
+              <p>Project Manager</p>
             </div>
           </a>
           <div class="member-details">
-            <p class="eyebrow">Project Lead</p>
-            <h3>Member 1</h3>
+            <p class="eyebrow">Project Manager</p>
+            <h3>Danica T. Moyano</h3>
             <p>Guides the product direction, planning, and team coordination that keep Pincraft clear, practical, and aligned from concept to delivery.</p>
           </div>
         </article>
@@ -478,12 +492,12 @@
         <article class="member-showcase" data-reveal>
           <a class="member-card member-card--link" href="https://example.com/member-2" target="_blank" rel="noreferrer" aria-label="Open Member 2 portfolio">
             <div class="member-card__media">
-              <img src="assets/member-2.jpg" alt="Profile photo placeholder for Member 2, UI Designer">
-              <span class="member-card__fallback" aria-hidden="true">M2</span>
+              <img src="assets/mark.jpg" alt="Profile photo placeholder for Member 2, UI Designer">
+              <span class="member-card__fallback" aria-hidden="true"></span>
             </div>
             <div class="member-card__body">
-              <h3>Member 2</h3>
-              <p>UI Designer</p>
+              <h3>Mark Dyvie F. Cerna</h3>
+              <p>Frontend Developer</p>
             </div>
           </a>
           <div class="member-details">

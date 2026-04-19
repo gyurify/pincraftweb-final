@@ -211,9 +211,20 @@ main > * {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+
+.brand__logo {
+  display: block;
+  width: clamp(8.5rem, 15vw, 11rem);
+  height: auto;
+  max-height: 2.7rem;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(16, 87, 214, 0.22));
 }
 
 .navbar-controls {
@@ -569,6 +580,19 @@ html[data-theme="light"] .theme-toggle__thumb {
 
 .home-section h1 {
   font-size: clamp(2.75rem, 9vw, 5.5rem);
+}
+
+.hero-brand {
+  display: grid;
+  place-items: center;
+}
+
+.hero-logo {
+  width: min(100%, clamp(18rem, 44vw, 34rem));
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 34px rgba(18, 91, 224, 0.2));
 }
 
 .hero-tagline {

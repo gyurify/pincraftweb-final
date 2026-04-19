@@ -1,0 +1,166 @@
+.portfolio-page {
+  background-color: #f4f8fc;
+  font-family: "Space Grotesk", sans-serif;
+  color: #1a202c;
+}
+
+.portfolio-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.portfolio-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.back-link {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #4b7cff;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.back-link:hover {
+  color: #143a7c;
+}
+
+.avatar-wrapper {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 1.25rem;
+  border-radius: 30px;
+  border: 2px solid #4b7cff;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 10px 25px rgba(75, 124, 255, 0.15);
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portfolio-name {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #143a7c;
+  margin: 0;
+}
+
+.portfolio-role {
+  font-size: 0.95rem;
+  color: #5c667a;
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+.portfolio-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 14px 32px rgba(22, 35, 67, 0.04);
+  border: 1px solid rgba(75, 124, 255, 0.08);
+}
+
+.card-title {
+  color: #143a7c;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 1.75rem;
+  border-bottom: 3px solid #e0ebff;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.about-text {
+  color: #5c667a;
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.subjects-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #e0ebff;
+}
+
+.subjects-table th,
+.subjects-table td {
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #e0ebff;
+}
+
+.table-header-main th {
+  background-color: #143a7c;
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+}
+
+.table-header-sub th {
+  background-color: #f4f8fc;
+  color: #143a7c;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.subjects-table td {
+  color: #5c667a;
+  font-weight: 500;
+}
+
+.hobbies-list {
+  color: #5c667a;
+  line-height: 1.8;
+  font-size: 0.95rem;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.hobbies-list li {
+  margin-bottom: 0.5rem;
+}
+
+.see-more-wrapper {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+.btn-see-more {
+  background-color: #4b7cff;
+  color: white;
+  border: none;
+  padding: 0.85rem 2.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 10px 20px rgba(75, 124, 255, 0.2);
+}
+
+.btn-see-more:hover {
+  background-color: #1c4cc2;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(75, 124, 255, 0.3);
+}
