@@ -633,6 +633,9 @@ const demoTextKeys = ["text", "font", "color"];
 let demoState = null;
 let demoDrag = null;
 let demoLayerReorder = null;
+const DEFAULT_DEMO_LOGO_SRC = "assets/trial-logo.png";
+const isLegacyDemoPlaceholder = (src) =>
+  typeof src === "string" && src.startsWith("data:image/svg+xml") && src.includes("Photo");
 
 const createDemoPlaceholderImage = (label, tone = "#8eb9ff") => {
   const svg = `
@@ -661,7 +664,7 @@ const createDemoState = () => ({
       id: "photo-1",
       type: "image",
       name: "Photo",
-      src: createDemoPlaceholderImage("Photo", "#7ea8ff"),
+      src: DEFAULT_DEMO_LOGO_SRC,
       x: 28,
       y: 50,
       size: 22,
@@ -735,15 +738,21 @@ const createDemoId = (prefix) => `${prefix}-${Date.now()}-${Math.random().toStri
 
 const normalizeDemoLayer = (layer, index) => {
   if (layer.type === "image") {
+    const useDefaultLogo = layer.id === "photo-1" && isLegacyDemoPlaceholder(layer.src);
+
     return {
       id: layer.id ?? createDemoId("photo"),
       type: "image",
       name: layer.name ?? `Photo ${index + 1}`,
-      src: layer.src ?? createDemoPlaceholderImage("Photo"),
+      src: useDefaultLogo ? DEFAULT_DEMO_LOGO_SRC : layer.src ?? createDemoPlaceholderImage("Photo"),
       x: typeof layer.x === "number" ? layer.x : 50,
       y: typeof layer.y === "number" ? layer.y : 50,
       size: typeof layer.size === "number" ? layer.size : 24,
-      ratio: typeof layer.ratio === "number" && layer.ratio > 0 ? layer.ratio : 1,
+      ratio: useDefaultLogo
+        ? 1
+        : typeof layer.ratio === "number" && layer.ratio > 0
+          ? layer.ratio
+          : 1,
       rotation: typeof layer.rotation === "number" ? layer.rotation : 0,
       stretch: typeof layer.stretch === "number" ? layer.stretch : 100,
       visible: layer.visible !== false,
